@@ -1,2 +1,2 @@
-# backend-e-comerce-spring
-Basic backend for an e-comerce in spring boot
+# backend-e-commerce-spring
+Basic backend for an e-commerce in spring boot
