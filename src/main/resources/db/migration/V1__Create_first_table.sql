@@ -12,7 +12,7 @@ CREATE TABLE product_discount
 
 -- ************************************** product
 
-CREATE TABLE product
+CREATE TABLE products
 (
  "id"               serial NOT NULL,
  discount_id      int NULL,
@@ -32,14 +32,14 @@ CREATE TABLE product
  CONSTRAINT FK_15 FOREIGN KEY ( discount_id ) REFERENCES product_discount ( "id" )
 );
 
-CREATE INDEX IDX_product_discount ON product
+CREATE INDEX IDX_product_discount ON products
 (
  discount_id
 );
 
 -- ************************************** "permission"
 
-CREATE TABLE "permission"
+CREATE TABLE "permissions"
 (
  "id"           serial NOT NULL,
  section_name varchar(50) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE "permission"
 
 -- ************************************** "user"
 
-CREATE TABLE "user"
+CREATE TABLE "users"
 (
  "id"           serial NOT NULL,
  first_name   varchar(50) NOT NULL,
@@ -77,7 +77,7 @@ CREATE TABLE address
  city      varchar(50) NOT NULL,
  country   varchar(50) NOT NULL,
  CONSTRAINT PK_address PRIMARY KEY ( "id" ),
- CONSTRAINT FK_12 FOREIGN KEY ( user_id ) REFERENCES "user" ( "id" )
+ CONSTRAINT FK_12 FOREIGN KEY ( user_id ) REFERENCES "users" ( "id" )
 );
 
 CREATE INDEX IDX_address_user ON address
@@ -103,7 +103,7 @@ CREATE INDEX IDX_category_parent ON category
 
 -- ************************************** "order"
 
-CREATE TABLE "order"
+CREATE TABLE "orders"
 (
  "id"         serial NOT NULL,
  user_id    int NOT NULL,
@@ -111,16 +111,16 @@ CREATE TABLE "order"
  created_at timestamp NOT NULL,
  statusCode int NOT NULL,
  CONSTRAINT PK_order PRIMARY KEY ( "id" ),
- CONSTRAINT FK_5 FOREIGN KEY ( user_id ) REFERENCES "user" ( "id" ),
+ CONSTRAINT FK_5 FOREIGN KEY ( user_id ) REFERENCES "users" ( "id" ),
  CONSTRAINT FK_14 FOREIGN KEY ( address_id ) REFERENCES address ( "id" )
 );
 
-CREATE INDEX IDX_order_user ON "order"
+CREATE INDEX IDX_order_user ON "orders"
 (
  user_id
 );
 
-CREATE INDEX IDX_order_address ON "order"
+CREATE INDEX IDX_order_address ON "orders"
 (
  address_id
 );
@@ -142,8 +142,8 @@ CREATE TABLE payment_method
  description     text NOT NULL,
  currency        varchar(50) NOT NULL,
  CONSTRAINT PK_payment_method PRIMARY KEY ( "id" ),
- CONSTRAINT FK_8 FOREIGN KEY ( user_id ) REFERENCES "user" ( "id" ),
- CONSTRAINT FK_9 FOREIGN KEY ( order_id ) REFERENCES "order" ( "id" )
+ CONSTRAINT FK_8 FOREIGN KEY ( user_id ) REFERENCES "users" ( "id" ),
+ CONSTRAINT FK_9 FOREIGN KEY ( order_id ) REFERENCES "orders" ( "id" )
 );
 
 CREATE INDEX IDX_payment_method_user ON payment_method
@@ -166,8 +166,8 @@ CREATE TABLE order_item
  purchase_price bigint NOT NULL,
  quantity       int NOT NULL,
  CONSTRAINT PK_order_item PRIMARY KEY ( "id" ),
- CONSTRAINT FK_6 FOREIGN KEY ( product_id ) REFERENCES product ( "id" ),
- CONSTRAINT FK_11_1 FOREIGN KEY ( order_id ) REFERENCES "order" ( "id" )
+ CONSTRAINT FK_6 FOREIGN KEY ( product_id ) REFERENCES products ( "id" ),
+ CONSTRAINT FK_11_1 FOREIGN KEY ( order_id ) REFERENCES "orders" ( "id" )
 );
 
 CREATE INDEX IDX_order_item_product ON order_item
@@ -188,7 +188,7 @@ CREATE TABLE product_category
  product_id  int NOT NULL,
  category_id int NOT NULL,
  CONSTRAINT PK_product_category PRIMARY KEY ( "id" ),
- CONSTRAINT FK_1 FOREIGN KEY ( product_id ) REFERENCES product ( "id" ),
+ CONSTRAINT FK_1 FOREIGN KEY ( product_id ) REFERENCES products ( "id" ),
  CONSTRAINT FK_2 FOREIGN KEY ( category_id ) REFERENCES category ( "id" )
 );
 
@@ -215,7 +215,7 @@ CREATE TABLE product_inventory
  provider     varchar(50) NOT NULL,
  price        bigint NOT NULL,
  CONSTRAINT PK_product_inventory PRIMARY KEY ( "id" ),
- CONSTRAINT FK_13 FOREIGN KEY ( product_id ) REFERENCES product ( "id" )
+ CONSTRAINT FK_13 FOREIGN KEY ( product_id ) REFERENCES products ( "id" )
 );
 
 CREATE INDEX IDX_product_inventory_product ON product_inventory
@@ -225,23 +225,23 @@ CREATE INDEX IDX_product_inventory_product ON product_inventory
 
 -- ************************************** role
 
-CREATE TABLE role
+CREATE TABLE roles
 (
  "id"            serial NOT NULL,
  role_name     varchar(50) NOT NULL,
  permission_id int NOT NULL,
  user_id       int NOT NULL,
  CONSTRAINT PK_role PRIMARY KEY ( "id" ),
- CONSTRAINT FK_3 FOREIGN KEY ( permission_id ) REFERENCES "permission" ( "id" ),
- CONSTRAINT FK_4 FOREIGN KEY ( user_id ) REFERENCES "user" ( "id" )
+ CONSTRAINT FK_3 FOREIGN KEY ( permission_id ) REFERENCES "permissions" ( "id" ),
+ CONSTRAINT FK_4 FOREIGN KEY ( user_id ) REFERENCES "users" ( "id" )
 );
 
-CREATE INDEX IDX_role_permission ON role
+CREATE INDEX IDX_role_permission ON roles
 (
  permission_id
 );
 
-CREATE INDEX IDX_role_user ON role
+CREATE INDEX IDX_role_user ON roles
 (
  user_id
 );
@@ -255,8 +255,8 @@ CREATE TABLE cart_item
  product_id int NOT NULL,
  amount     int NOT NULL,
  CONSTRAINT PK_cart_item PRIMARY KEY ( "id" ),
- CONSTRAINT FK_10 FOREIGN KEY ( user_id ) REFERENCES "user" ( "id" ),
- CONSTRAINT FK_11 FOREIGN KEY ( product_id ) REFERENCES product ( "id" )
+ CONSTRAINT FK_10 FOREIGN KEY ( user_id ) REFERENCES "users" ( "id" ),
+ CONSTRAINT FK_11 FOREIGN KEY ( product_id ) REFERENCES products ( "id" )
 );
 
 CREATE INDEX IDX_cart_item_user ON cart_item

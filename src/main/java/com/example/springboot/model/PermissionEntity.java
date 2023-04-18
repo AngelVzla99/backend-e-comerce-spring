@@ -3,7 +3,7 @@ package com.example.springboot.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="permission")
+@Table(name="permissions")
 public class PermissionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
