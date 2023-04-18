@@ -37,7 +37,16 @@ CREATE INDEX IDX_product_discount ON products
  discount_id
 );
 
--- ************************************** "permission"
+-- ************************************** roles
+
+CREATE TABLE roles
+(
+ "id"        serial NOT NULL,
+ role_name  VARCHAR(50) NOT NULL,
+ CONSTRAINT PK_roles PRIMARY KEY ( "id" )
+);
+
+-- ************************************** "permissions"
 
 CREATE TABLE "permissions"
 (
@@ -50,7 +59,7 @@ CREATE TABLE "permissions"
  CONSTRAINT PK_permission PRIMARY KEY ( "id" )
 );
 
--- ************************************** "user"
+-- ************************************** "users"
 
 CREATE TABLE "users"
 (
@@ -62,6 +71,48 @@ CREATE TABLE "users"
  phone_number varchar(50) NOT NULL,
  password     varchar(50) NOT NULL,
  CONSTRAINT PK_user PRIMARY KEY ( "id" )
+);
+
+-- ************************************** roles_permissions
+
+CREATE TABLE roles_permissions
+(
+ role_id       int NOT NULL,
+ permission_id int NOT NULL,
+ CONSTRAINT PK_roles_permissions PRIMARY KEY ( role_id, permission_id ),
+ CONSTRAINT FK_17 FOREIGN KEY ( role_id ) REFERENCES roles ( "id" ),
+ CONSTRAINT FK_18 FOREIGN KEY ( permission_id ) REFERENCES permissions ( "id" )
+);
+
+CREATE INDEX IDX_roles_permissions_role_id ON roles_permissions
+(
+ role_id
+);
+
+CREATE INDEX IDX_roles_permissions_permission_id ON roles_permissions
+(
+ permission_id
+);
+
+-- ************************************** users_roles
+
+CREATE TABLE users_roles
+(
+ user_id int NOT NULL,
+ role_id int NOT NULL,
+ CONSTRAINT PK_users_roles PRIMARY KEY ( user_id, role_id ),
+ CONSTRAINT FK_15_1 FOREIGN KEY ( user_id ) REFERENCES users ( "id" ),
+ CONSTRAINT FK_16_1 FOREIGN KEY ( role_id ) REFERENCES roles ( "id" )
+);
+
+CREATE INDEX IDX_users_roles_user_id ON users_roles
+(
+ user_id
+);
+
+CREATE INDEX IDX_users_roles_role_id ON users_roles
+(
+ role_id
 );
 
 
@@ -221,29 +272,6 @@ CREATE TABLE product_inventory
 CREATE INDEX IDX_product_inventory_product ON product_inventory
 (
  product_id
-);
-
--- ************************************** role
-
-CREATE TABLE roles
-(
- "id"            serial NOT NULL,
- role_name     varchar(50) NOT NULL,
- permission_id int NOT NULL,
- user_id       int NOT NULL,
- CONSTRAINT PK_role PRIMARY KEY ( "id" ),
- CONSTRAINT FK_3 FOREIGN KEY ( permission_id ) REFERENCES "permissions" ( "id" ),
- CONSTRAINT FK_4 FOREIGN KEY ( user_id ) REFERENCES "users" ( "id" )
-);
-
-CREATE INDEX IDX_role_permission ON roles
-(
- permission_id
-);
-
-CREATE INDEX IDX_role_user ON roles
-(
- user_id
 );
 
 -- ************************************** cart_item

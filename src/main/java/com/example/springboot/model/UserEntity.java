@@ -2,9 +2,10 @@ package com.example.springboot.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -33,6 +34,17 @@ public class UserEntity {
     @Column()
     private  String password;
 
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "users_roles",
+            joinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "id",
+                            nullable = false, updatable = false)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "role_id", referencedColumnName = "id",
+                            nullable = false, updatable = false)})
+    private Set<PermissionEntity> roles = new HashSet<>();
+
     @Override
     public String toString() {
         return "UserEntity{" +
@@ -43,8 +55,34 @@ public class UserEntity {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", password='" + password + '\'' +
+                ", roles=" + roles +
                 '}';
     }
+
+    // constructors
+
+    public UserEntity() {}
+
+    public UserEntity(String firstName, String lastName, String email, String phoneNumber, String password, Set<PermissionEntity> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    public UserEntity(Long id, String firstName, String lastName, String email, String phoneNumber, String password, Set<PermissionEntity> roles) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    // getters and setters
 
     public Long getId() {
         return id;
@@ -100,5 +138,13 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<PermissionEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<PermissionEntity> roles) {
+        this.roles = roles;
     }
 }

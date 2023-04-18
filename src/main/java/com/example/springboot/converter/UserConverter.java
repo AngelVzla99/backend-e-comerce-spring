@@ -1,0 +1,39 @@
+package com.example.springboot.converter;
+
+import com.example.springboot.dto.UserDTO;
+import com.example.springboot.model.PermissionEntity;
+import com.example.springboot.model.UserEntity;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+@Component
+public class UserConverter {
+    public UserDTO toDTO(UserEntity user) {
+        List<Long> roles = new ArrayList<>();
+        for (PermissionEntity role : user.getRoles()) roles.add(role.getId());
+        return new UserDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getPassword(),
+                roles
+        );
+    }
+
+    public UserEntity toEntity(UserDTO user, Set<PermissionEntity> roles) {
+        return new UserEntity(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getPassword(),
+                roles
+        );
+    }
+}
