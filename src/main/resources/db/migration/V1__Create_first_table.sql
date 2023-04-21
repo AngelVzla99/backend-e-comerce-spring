@@ -69,7 +69,7 @@ CREATE TABLE "users"
  created_at   timestamp NOT NULL,
  email        varchar(50) NOT NULL,
  phone_number varchar(50) NOT NULL,
- password     varchar(50) NOT NULL,
+ password     text NOT NULL,
  CONSTRAINT PK_user PRIMARY KEY ( "id" )
 );
 

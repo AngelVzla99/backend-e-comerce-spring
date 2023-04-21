@@ -2,21 +2,18 @@ package com.example.springboot.controller;
 
 import com.example.springboot.converter.PermissionConverter;
 import com.example.springboot.converter.RoleConverter;
-import com.example.springboot.converter.UserConverter;
 import com.example.springboot.dto.PermissionDTO;
 import com.example.springboot.dto.RoleDTO;
-import com.example.springboot.dto.UserDTO;
 import com.example.springboot.model.PermissionEntity;
 import com.example.springboot.model.RoleEntity;
 import com.example.springboot.model.UserEntity;
 import com.example.springboot.service.PermissionService;
 import com.example.springboot.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/role")
@@ -29,8 +26,10 @@ public class RoleController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public RoleEntity getUser(@PathVariable Long id){
-        return roleService.getById(id);
+    public RoleDTO getUser(@PathVariable Long id){
+        RoleConverter mapper = new RoleConverter();
+        RoleEntity roleEntity = roleService.getById(id);
+        return mapper.toDTO(roleEntity);
     }
 
     @PostMapping("/create")
