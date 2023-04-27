@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleService {
@@ -17,8 +18,8 @@ public class RoleService {
         return roleEntityRepository.findAll();
     }
 
-    public RoleEntity getById(Long id) {
-        return roleEntityRepository.findById(id).get();
+    public Optional<RoleEntity> getById(Long id) {
+        return roleEntityRepository.findById(id);
     }
 
     public RoleEntity save(RoleEntity user) {

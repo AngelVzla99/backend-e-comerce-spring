@@ -3,11 +3,14 @@ package com.example.springboot.controller;
 import com.example.springboot.converter.UserConverter;
 import com.example.springboot.dto.UserDTO;
 import com.example.springboot.model.PermissionEntity;
+import com.example.springboot.model.RoleEntity;
 import com.example.springboot.model.UserEntity;
 import com.example.springboot.service.PermissionService;
+import com.example.springboot.service.RoleService;
 import com.example.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,14 +24,19 @@ public class UserController {
 
     @Autowired
     UserService userService;
-
+    @Autowired
+    RoleService roleService;
     @Autowired
     PermissionService permissionService;
 
+    @PreAuthorize("hasAnyRole('admin','customer')")
     @GetMapping("/{id}")
     @ResponseBody
-    public UserEntity getUser(@PathVariable Long id){
-        return userService.getById(id);
+    public UserDTO getUser(@PathVariable Long id){
+        UserConverter mapper = new UserConverter();
+        Optional<UserEntity> user =  userService.getById(id);
+        if(user.isPresent()) return mapper.toDTO(user.get());
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND,"This user is not in the database");
     }
 
     @PostMapping("/create")
@@ -39,9 +47,9 @@ public class UserController {
         System.out.println();
 
         // Search each role in the database
-        Set<PermissionEntity> roles = new HashSet<>();
+        Set<RoleEntity> roles = new HashSet<>();
         for (Long id : user.getRoles()) {
-            Optional<PermissionEntity> roleTemp = permissionService.getById(id);
+            Optional<RoleEntity> roleTemp = roleService.getById(id);
             if (roleTemp.isPresent()) roles.add(roleTemp.get());
             else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

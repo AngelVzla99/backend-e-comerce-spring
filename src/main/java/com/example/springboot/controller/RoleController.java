@@ -10,9 +10,12 @@ import com.example.springboot.model.UserEntity;
 import com.example.springboot.service.PermissionService;
 import com.example.springboot.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -28,8 +31,9 @@ public class RoleController {
     @ResponseBody
     public RoleDTO getUser(@PathVariable Long id){
         RoleConverter mapper = new RoleConverter();
-        RoleEntity roleEntity = roleService.getById(id);
-        return mapper.toDTO(roleEntity);
+        Optional<RoleEntity> roleEntity = roleService.getById(id);
+        if( roleEntity.isPresent() )  return mapper.toDTO(roleEntity.get());
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/create")

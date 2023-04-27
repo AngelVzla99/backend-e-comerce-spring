@@ -4,8 +4,13 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class TokenUtils {
@@ -22,18 +27,44 @@ public class TokenUtils {
 
     public TokenUtils() {}
 
-    public static String createToken(String name, String email){
+    // =========================
+    // get claims from token  //
+    // =========================
+
+    public String getUsernameFromToken(String token) {
+        return getClaimFromToken(token, Claims::getSubject);
+    }
+
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(SIGNING_KEY)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    // ==============================
+    //   encrypt and decrypt token //
+    // ==============================
+
+    public static String createToken(Authentication authentication){
         long expirationTime = TOKEN_VALIDITY*1000;
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
 
-        Map<String, Object> extra = new HashMap<>();
-        extra.put("name", name);
+        // save in the token the authorities of the user
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
 
         return Jwts.builder()
-                .setSubject(name)
+                .setSubject(authentication.getName())
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
-                .claim("name", name)
+                .claim(AUTHORITIES_KEY, authorities)
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
                 .compact();
     }
@@ -44,8 +75,17 @@ public class TokenUtils {
                     .setSigningKey(SIGNING_KEY)
                     .parseClaimsJws(token)
                     .getBody();
+
+            // get email form token
             String email = claims.getSubject();
-            return new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+
+            // get authorities from token
+            final Collection<? extends GrantedAuthority> authorities =
+                    Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                            .map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toList());
+
+            return new UsernamePasswordAuthenticationToken(email, "", authorities);
         }catch (JwtException e){
             return null;
         }

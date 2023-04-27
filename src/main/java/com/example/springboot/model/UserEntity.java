@@ -35,7 +35,7 @@ public class UserEntity {
     private  String password;
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "users_roles",
             joinColumns = {
                     @JoinColumn(name = "user_id", referencedColumnName = "id",
@@ -43,7 +43,7 @@ public class UserEntity {
             inverseJoinColumns = {
                     @JoinColumn(name = "role_id", referencedColumnName = "id",
                             nullable = false, updatable = false)})
-    private Set<PermissionEntity> roles = new HashSet<>();
+    private Set<RoleEntity> roles = new HashSet<RoleEntity>();
 
     @Override
     public String toString() {
@@ -63,7 +63,7 @@ public class UserEntity {
 
     public UserEntity() {}
 
-    public UserEntity(String firstName, String lastName, String email, String phoneNumber, String password, Set<PermissionEntity> roles) {
+    public UserEntity(String firstName, String lastName, String email, String phoneNumber, String password, Set<RoleEntity> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -72,7 +72,7 @@ public class UserEntity {
         this.roles = roles;
     }
 
-    public UserEntity(Long id, String firstName, String lastName, String email, String phoneNumber, String password, Set<PermissionEntity> roles) {
+    public UserEntity(Long id, String firstName, String lastName, String email, String phoneNumber, String password, Set<RoleEntity> roles) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -140,11 +140,11 @@ public class UserEntity {
         this.password = password;
     }
 
-    public Set<PermissionEntity> getRoles() {
+    public Set<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<PermissionEntity> roles) {
+    public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
     }
 }
