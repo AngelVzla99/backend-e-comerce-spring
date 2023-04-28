@@ -45,6 +45,17 @@ public class UserDTO {
         this.roles = roles;
     }
 
+    public UserDTO(Long id, String firstName, String lastName, Date createdAt, String email, String phoneNumber, String password, List<Long> roles) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.createdAt = createdAt;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.roles = roles;
+    }
+
     // ===========================
     //   getters and setters    //
     // ===========================

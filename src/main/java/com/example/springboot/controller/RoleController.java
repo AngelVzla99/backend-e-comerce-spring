@@ -1,32 +1,36 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.converter.PermissionConverter;
 import com.example.springboot.converter.RoleConverter;
-import com.example.springboot.dto.PermissionDTO;
 import com.example.springboot.dto.RoleDTO;
-import com.example.springboot.model.PermissionEntity;
 import com.example.springboot.model.RoleEntity;
 import com.example.springboot.model.UserEntity;
-import com.example.springboot.service.PermissionService;
 import com.example.springboot.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/api/roles")
 public class RoleController {
     @Autowired
     RoleService roleService;
 
-    @Autowired
-    PermissionService permissionService;
+    // ===============
+    //    get EPs   //
+    // ===============
 
+    @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("/{id}")
     @ResponseBody
     public RoleDTO getUser(@PathVariable Long id){
@@ -36,29 +40,61 @@ public class RoleController {
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('admin')")
+    @GetMapping("/all")
+    @ResponseBody
+    public List<RoleDTO> getAll(){
+        RoleConverter mapper = new RoleConverter();
+        List<RoleEntity> roles = roleService.getAll();
+
+        // convert all roles Entities to DTOs
+        List<RoleDTO> roleDTOs = roles.stream().map(mapper::toDTO).collect(Collectors.toList());
+        return roleDTOs;
+    }
+
+    @GetMapping("")
+    @ResponseBody
+    public List<RoleDTO> getAllRoles(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        // request to the database using pagination
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RoleEntity> roleEntityPage = roleService.findAllPageable(pageable);
+        // convert the resulting list to dto
+        RoleConverter mapper = new RoleConverter();
+        List<RoleDTO> roleDTOs = roleEntityPage
+                .getContent()
+                .stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
+        return roleDTOs;
+    }
+
+    // ===============
+    //   post EPs   //
+    // ===============
+
+    @PreAuthorize("hasAnyRole('admin')")
     @PostMapping("/create")
     @ResponseBody
-    public RoleEntity createUser(@RequestBody RoleDTO roleDTO) {
+    public RoleEntity create(@RequestBody RoleDTO roleDTO) {
         RoleConverter roleConverter = new RoleConverter();
-        PermissionConverter permissionConverter = new PermissionConverter();
         // users for this role
         Set<UserEntity> users = new HashSet<>();
 
-        // permissions for this role (create all the permissions)
-        Set<PermissionEntity> permissions = new HashSet<>();
-        for(PermissionDTO permissionDTO : roleDTO.getPermissions()){
-            PermissionEntity permissionEntity = permissionConverter.toEntity(permissionDTO);
-            permissionEntity = permissionService.save( permissionEntity );
-            permissions.add( permissionEntity );
-        }
-
-        RoleEntity roleEntity = roleConverter.toEntity(roleDTO,users,permissions);
+        RoleEntity roleEntity = roleConverter.toEntity(roleDTO,users);
         return roleService.save( roleEntity );
     }
 
-    @DeleteMapping("/delete/{id}")
+    // ================
+    //   delete EPs  //
+    // ================
+
+    @PreAuthorize("hasAnyRole('admin')")
+    @DeleteMapping("/{id}")
     @ResponseBody
-    public String deleteUser(@PathVariable Long id){
+    public String delete(@PathVariable Long id){
         roleService.delete(id);
         return "ok";
     }

@@ -1,6 +1,5 @@
 package com.example.springboot.repository;
 
-import com.example.springboot.model.PermissionEntity;
 import com.example.springboot.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -46,18 +46,6 @@ CREATE TABLE roles
  CONSTRAINT PK_roles PRIMARY KEY ( "id" )
 );
 
--- ************************************** "permissions"
-
-CREATE TABLE "permissions"
-(
- "id"           serial NOT NULL,
- section_name varchar(50) NOT NULL,
- "create"       boolean NOT NULL,
- update       boolean NOT NULL,
- delete       boolean NOT NULL,
- read       boolean NOT NULL,
- CONSTRAINT PK_permission PRIMARY KEY ( "id" )
-);
 
 -- ************************************** "users"
 
@@ -73,26 +61,6 @@ CREATE TABLE "users"
  CONSTRAINT PK_user PRIMARY KEY ( "id" )
 );
 
--- ************************************** roles_permissions
-
-CREATE TABLE roles_permissions
-(
- role_id       int NOT NULL,
- permission_id int NOT NULL,
- CONSTRAINT PK_roles_permissions PRIMARY KEY ( role_id, permission_id ),
- CONSTRAINT FK_17 FOREIGN KEY ( role_id ) REFERENCES roles ( "id" ),
- CONSTRAINT FK_18 FOREIGN KEY ( permission_id ) REFERENCES permissions ( "id" )
-);
-
-CREATE INDEX IDX_roles_permissions_role_id ON roles_permissions
-(
- role_id
-);
-
-CREATE INDEX IDX_roles_permissions_permission_id ON roles_permissions
-(
- permission_id
-);
 
 -- ************************************** users_roles
 

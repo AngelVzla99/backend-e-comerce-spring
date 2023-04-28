@@ -2,10 +2,9 @@ package com.example.springboot.controller;
 
 import com.example.springboot.converter.UserConverter;
 import com.example.springboot.dto.UserDTO;
-import com.example.springboot.model.PermissionEntity;
 import com.example.springboot.model.RoleEntity;
 import com.example.springboot.model.UserEntity;
-import com.example.springboot.service.PermissionService;
+import com.example.springboot.pojo.UserRequestAddRole;
 import com.example.springboot.service.RoleService;
 import com.example.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,33 +18,36 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
     UserService userService;
     @Autowired
     RoleService roleService;
-    @Autowired
-    PermissionService permissionService;
 
-    @PreAuthorize("hasAnyRole('admin','customer')")
+    // ===============
+    //    get EPs   //
+    // ===============
+
+    @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("/{id}")
     @ResponseBody
-    public UserDTO getUser(@PathVariable Long id){
+    public UserDTO getUser(@PathVariable Long id) {
         UserConverter mapper = new UserConverter();
-        Optional<UserEntity> user =  userService.getById(id);
-        if(user.isPresent()) return mapper.toDTO(user.get());
-        else throw new ResponseStatusException(HttpStatus.NOT_FOUND,"This user is not in the database");
+        Optional<UserEntity> user = userService.getById(id);
+        if (user.isPresent()) return mapper.toDTO(user.get());
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This user is not in the database");
     }
 
-    @PostMapping("/create")
-    @ResponseBody
-    public UserEntity createUser(@RequestBody UserDTO user) {
-        System.out.println();
-        System.out.println(user.toString());
-        System.out.println();
+    // ===============
+    //   post EPs   //
+    // ===============
 
+    @PreAuthorize("hasAnyRole('admin')")
+    @PostMapping("/create-user")
+    @ResponseBody
+    public UserDTO createUserAdmin(@RequestBody UserDTO user) {
         // Search each role in the database
         Set<RoleEntity> roles = new HashSet<>();
         for (Long id : user.getRoles()) {
@@ -57,15 +59,53 @@ public class UserController {
         // convert DTO to Entity
         UserConverter mapper = new UserConverter();
         UserEntity userEntity = mapper.toEntity(user, roles);
-        return userService.save(userEntity);
+        return mapper.toDTO(userService.save(userEntity));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/create-customer")
     @ResponseBody
-    public String deleteUser(@PathVariable Long id){
+    public UserDTO createUser(@RequestBody UserDTO user) {
+        // Search each role in the database
+        Set<RoleEntity> roles = new HashSet<>();
+        RoleEntity role = roleService.findByRoleNameOrCreate("customer");
+        roles.add(role);
+
+        // convert DTO to Entity
+        UserConverter mapper = new UserConverter();
+        UserEntity userEntity = mapper.toEntity(user, roles);
+        return mapper.toDTO(userService.save(userEntity));
+    }
+
+    @PreAuthorize("hasAnyRole('admin')")
+    @PutMapping("/{userId}/add-roles")
+    @ResponseBody
+    public void addRole(@PathVariable Long userId, @RequestBody UserRequestAddRole request) {
+        UserEntity user = userService
+                .getById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        // add each role the user list
+        Set<RoleEntity> userRoles = user.getRoles();
+        for (Long roleId : request.getRoleIds()) {
+            RoleEntity role = roleService
+                    .getById(roleId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role " + roleId + " not found"));
+            userRoles.add(role);
+        }
+
+        // update the database
+        user.setRoles(userRoles);
+        userService.save(user);
+    }
+
+    // ================
+    //   delete EPs  //
+    // ================
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public String deleteUser(@PathVariable Long id) {
         userService.delete(id);
         return "ok";
     }
-
-
 }

@@ -19,23 +19,12 @@ public class RoleEntity {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<UserEntity> users = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "roles_permissions",
-            joinColumns = {
-                    @JoinColumn(name = "role_id", referencedColumnName = "id",
-                            nullable = false, updatable = false)},
-            inverseJoinColumns = {
-                    @JoinColumn(name = "permission_id", referencedColumnName = "id",
-                            nullable = false, updatable = false)})
-    private Set<PermissionEntity> permissions = new HashSet<>();
-
     @Override
     public String toString() {
         return "RoleEntity{" +
                 "id=" + id +
                 ", roleName='" + roleName + '\'' +
                 ", users=" + users +
-                ", permissions=" + permissions +
                 '}';
     }
 
@@ -43,17 +32,15 @@ public class RoleEntity {
 
     public RoleEntity() {}
 
-    public RoleEntity(String roleName, Set<UserEntity> users, Set<PermissionEntity> permissions) {
+    public RoleEntity(String roleName, Set<UserEntity> users) {
         this.roleName = roleName;
         this.users = users;
-        this.permissions = permissions;
     }
 
-    public RoleEntity(Long id, String roleName, Set<UserEntity> users, Set<PermissionEntity> permissions) {
+    public RoleEntity(Long id, String roleName, Set<UserEntity> users) {
         this.id = id;
         this.roleName = roleName;
         this.users = users;
-        this.permissions = permissions;
     }
 
     // getters ans setters
@@ -82,11 +69,4 @@ public class RoleEntity {
         this.users = users;
     }
 
-    public Set<PermissionEntity> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(Set<PermissionEntity> permissions) {
-        this.permissions = permissions;
-    }
 }

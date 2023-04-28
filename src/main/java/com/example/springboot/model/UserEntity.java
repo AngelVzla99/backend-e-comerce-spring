@@ -82,6 +82,17 @@ public class UserEntity {
         this.roles = roles;
     }
 
+    public UserEntity(Long id, String firstName, String lastName, Date createdAt, String email, String phoneNumber, String password, Set<RoleEntity> roles) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.createdAt = createdAt;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.roles = roles;
+    }
+
     // getters and setters
 
     public Long getId() {

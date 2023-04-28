@@ -19,6 +19,7 @@ public class UserConverter {
                 user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
+                user.getCreatedAt(),
                 user.getEmail(),
                 user.getPhoneNumber(),
                 "",

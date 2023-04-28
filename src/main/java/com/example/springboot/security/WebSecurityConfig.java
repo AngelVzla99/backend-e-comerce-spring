@@ -39,13 +39,18 @@ public class WebSecurityConfig {
         return http
                 .csrf()
                 .disable()
-                .authorizeRequests()
-                   .anyRequest()
+                .authorizeHttpRequests()
+                // public endpoints
+                .requestMatchers("/api/users/create-customer").permitAll()
+                // private endpoints
+                .anyRequest()
                     .authenticated()
                     .and()
+                // user sessions
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
+                // JWT authentication and logic to validate the token
                 .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).and()
                 .addFilter(jwtAuthenticationFilter)
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -66,5 +71,4 @@ public class WebSecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
