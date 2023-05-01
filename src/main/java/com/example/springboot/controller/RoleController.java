@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +34,9 @@ public class RoleController {
     @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("/{id}")
     @ResponseBody
-    public RoleDTO getUser(@PathVariable Long id){
+    public RoleDTO get(@PathVariable Long id){
         RoleConverter mapper = new RoleConverter();
-        Optional<RoleEntity> roleEntity = roleService.getById(id);
+        Optional<RoleEntity> roleEntity = roleService.findById(id);
         if( roleEntity.isPresent() )  return mapper.toDTO(roleEntity.get());
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
@@ -52,22 +53,22 @@ public class RoleController {
         return roleDTOs;
     }
 
+    @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("")
     @ResponseBody
-    public List<RoleDTO> getAllRoles(
+    public Page<RoleDTO> getAllRoles(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy
     ) {
         // request to the database using pagination
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         Page<RoleEntity> roleEntityPage = roleService.findAllPageable(pageable);
+        if( !roleEntityPage.hasContent() )
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         // convert the resulting list to dto
         RoleConverter mapper = new RoleConverter();
-        List<RoleDTO> roleDTOs = roleEntityPage
-                .getContent()
-                .stream()
-                .map(mapper::toDTO)
-                .collect(Collectors.toList());
+        Page<RoleDTO> roleDTOs = roleEntityPage.map(mapper::toDTO);
         return roleDTOs;
     }
 
@@ -94,9 +95,10 @@ public class RoleController {
     @PreAuthorize("hasAnyRole('admin')")
     @DeleteMapping("/{id}")
     @ResponseBody
-    public String delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id){
+        if(roleService.findById(id).isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"There is no role with id "+id);
         roleService.delete(id);
-        return "ok";
     }
 
 }

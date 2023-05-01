@@ -51,7 +51,7 @@ public class UserController {
         // Search each role in the database
         Set<RoleEntity> roles = new HashSet<>();
         for (Long id : user.getRoles()) {
-            Optional<RoleEntity> roleTemp = roleService.getById(id);
+            Optional<RoleEntity> roleTemp = roleService.findById(id);
             if (roleTemp.isPresent()) roles.add(roleTemp.get());
             else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -88,7 +88,7 @@ public class UserController {
         Set<RoleEntity> userRoles = user.getRoles();
         for (Long roleId : request.getRoleIds()) {
             RoleEntity role = roleService
-                    .getById(roleId)
+                    .findById(roleId)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role " + roleId + " not found"));
             userRoles.add(role);
         }

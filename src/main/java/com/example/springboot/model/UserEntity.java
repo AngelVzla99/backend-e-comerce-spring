@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,7 +35,7 @@ public class UserEntity {
     @Column()
     private  String password;
 
-
+    // other relations
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "users_roles",
             joinColumns = {
@@ -45,6 +46,10 @@ public class UserEntity {
                             nullable = false, updatable = false)})
     private Set<RoleEntity> roles = new HashSet<RoleEntity>();
 
+    @OneToMany(mappedBy = "user")
+    private List<CartItemEntity> cartItems;
+
+    // to string
     @Override
     public String toString() {
         return "UserEntity{" +
@@ -58,6 +63,12 @@ public class UserEntity {
                 ", roles=" + roles +
                 '}';
     }
+
+    @OneToMany(mappedBy = "user")
+    private List<OrderEntity> orders;
+
+    @OneToMany(mappedBy = "user")
+    private List<PaymentMethodEntity> paymentMethods;
 
     // constructors
 
@@ -94,6 +105,15 @@ public class UserEntity {
     }
 
     // getters and setters
+
+
+    public List<CartItemEntity> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItemEntity> cartItems) {
+        this.cartItems = cartItems;
+    }
 
     public Long getId() {
         return id;

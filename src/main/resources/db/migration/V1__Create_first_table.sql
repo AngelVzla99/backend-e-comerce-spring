@@ -203,10 +203,9 @@ CREATE INDEX IDX_order_item_order ON order_item
 
 CREATE TABLE product_category
 (
- "id"          serial NOT NULL,
  product_id  int NOT NULL,
  category_id int NOT NULL,
- CONSTRAINT PK_product_category PRIMARY KEY ( "id" ),
+ CONSTRAINT PK_product_category PRIMARY KEY ( product_id, category_id ),
  CONSTRAINT FK_1 FOREIGN KEY ( product_id ) REFERENCES products ( "id" ),
  CONSTRAINT FK_2 FOREIGN KEY ( category_id ) REFERENCES category ( "id" )
 );

@@ -1,14 +1,12 @@
 package com.example.springboot.service;
 
 import com.example.springboot.model.RoleEntity;
-import com.example.springboot.model.UserEntity;
 import com.example.springboot.repository.RoleEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.Role;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +36,7 @@ public class RoleService {
         }
     }
 
-    public Optional<RoleEntity> getById(Long id) {
+    public Optional<RoleEntity> findById(Long id) {
         return roleEntityRepository.findById(id);
     }
 
