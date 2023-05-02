@@ -18,11 +18,22 @@ public class CartItemEntity {
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private ProductEntity product;
 
+    @Column()
+    private Integer amount;
+
     // constructor
 
     public CartItemEntity() {}
 
     // getters ans setters
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
 
     public Long getId() {
         return id;

@@ -49,6 +49,9 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     private List<CartItemEntity> cartItems;
 
+    @OneToMany(mappedBy = "user")
+    private List<AddressEntity> addresses;
+
     // to string
     @Override
     public String toString() {
@@ -106,6 +109,30 @@ public class UserEntity {
 
     // getters and setters
 
+
+    public List<AddressEntity> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<AddressEntity> addresses) {
+        this.addresses = addresses;
+    }
+
+    public List<OrderEntity> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderEntity> orders) {
+        this.orders = orders;
+    }
+
+    public List<PaymentMethodEntity> getPaymentMethods() {
+        return paymentMethods;
+    }
+
+    public void setPaymentMethods(List<PaymentMethodEntity> paymentMethods) {
+        this.paymentMethods = paymentMethods;
+    }
 
     public List<CartItemEntity> getCartItems() {
         return cartItems;
