@@ -2,7 +2,7 @@
 Basic backend for an e-commerce made in spring boot using a SQL database.
 
 # Technology
-* JPA and Hibernate - ORM to mapped SQL model
+* JPA and Hibernate - ORM to map the SQL model
 * Flyway - To handle migrations in the database
 * JWT - user authentication and authorization 
 
