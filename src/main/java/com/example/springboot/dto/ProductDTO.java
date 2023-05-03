@@ -4,6 +4,7 @@ import com.example.springboot.model.ProductEntity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class ProductDTO {
     private Long id;
@@ -19,10 +20,19 @@ public class ProductDTO {
     private String amount;
     private BigDecimal weight;
     private BigDecimal height;
+    private List<Long> categories;
 
     public ProductDTO() {}
 
     // GETTERS AND SETTERS
+
+    public List<Long> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Long> categories) {
+        this.categories = categories;
+    }
 
     public Long getId() {
         return id;

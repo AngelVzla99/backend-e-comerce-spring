@@ -2,8 +2,7 @@ package com.example.springboot.model;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "category")
@@ -15,13 +14,16 @@ public class CategoryEntity {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "parent_category")
     private CategoryEntity parent;
 
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<CategoryEntity> children = Collections.emptyList();
+
     // others columns
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "product_category",
             joinColumns = {
                     @JoinColumn(name = "product_id", referencedColumnName = "id",

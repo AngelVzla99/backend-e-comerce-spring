@@ -18,19 +18,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+// TODO: The categories have to be leafs in the tree of categories
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
     @Autowired
     ProductService productService;
+    @Autowired
+    ProductConverter productConverter;
 
     @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("/{id}")
     @ResponseBody
     public ProductDTO get(@PathVariable Long id) {
-        ProductConverter mapper = new ProductConverter();
         Optional<ProductEntity> product = productService.findById(id);
-        if (product.isPresent()) return mapper.toDTO(product.get());
+        if (product.isPresent()) return productConverter.toDTO(product.get());
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
@@ -38,10 +41,9 @@ public class ProductController {
     @GetMapping("/all")
     @ResponseBody
     public List<ProductDTO> getAll() {
-        ProductConverter mapper = new ProductConverter();
         List<ProductEntity> entities = productService.getAll();
         // convert all Entities to DTOs
-        return entities.stream().map(mapper::toDTO).collect(Collectors.toList());
+        return entities.stream().map(productConverter::toDTO).collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAnyRole('admin')")
@@ -58,8 +60,7 @@ public class ProductController {
         if (!responsePage.hasContent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         // convert the resulting list to dto
-        ProductConverter mapper = new ProductConverter();
-        return responsePage.map(mapper::toDTO);
+        return responsePage.map(productConverter::toDTO);
     }
 
     // ===============
@@ -70,8 +71,7 @@ public class ProductController {
     @PostMapping("/create")
     @ResponseBody
     public ProductEntity create(@RequestBody ProductDTO productDTO) {
-        ProductConverter roleConverter = new ProductConverter();
-        ProductEntity product = roleConverter.toEntity(productDTO,null);
+        ProductEntity product = productConverter.toEntity(productDTO,null);
         return productService.save(product);
     }
 
