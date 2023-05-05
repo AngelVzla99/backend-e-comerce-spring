@@ -2,27 +2,33 @@ package com.example.springboot.converter;
 
 import com.example.springboot.dto.RoleDTO;
 import com.example.springboot.model.RoleEntity;
-import com.example.springboot.model.UserEntity;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class RoleConverter {
-    public RoleDTO toDTO(RoleEntity roleEntity) {
-        return new RoleDTO(
-                roleEntity.getId(),
-                roleEntity.getRoleName()
-        );
+
+    private final ModelMapper modelMapper;
+
+    public RoleConverter(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
     }
 
-    public RoleEntity toEntity(RoleDTO roleDTO, Set<UserEntity> users) {
-        return new RoleEntity(
-                roleDTO.getId(),
-                roleDTO.getRoleName(),
-                users
-        );
+    public RoleDTO toDTO(RoleEntity roleEntity) {
+        return modelMapper.map(roleEntity, RoleDTO.class);
+    }
+
+    public RoleEntity toEntity(RoleDTO roleDTO) {
+        return modelMapper.map(roleDTO, RoleEntity.class);
+    }
+
+    public List<RoleEntity> toEntityList(List<RoleDTO> DTOs){
+        return DTOs.stream().map(this::toEntity).toList();
+    }
+
+    public List<RoleDTO> toDtoList(List<RoleEntity> DTOs){
+        return DTOs.stream().map(this::toDTO).toList();
     }
 }

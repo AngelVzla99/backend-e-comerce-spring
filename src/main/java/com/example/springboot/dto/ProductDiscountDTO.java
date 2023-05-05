@@ -1,18 +1,14 @@
 package com.example.springboot.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.util.Date;
+import java.util.List;
 
 public class ProductDiscountDTO {
     private Long id;
     private Date expireAt;
     private Integer discountPercentage;
     private Boolean active;
+    private List<Long> productIds;
 
     @Override
     public String toString() {
@@ -42,6 +38,15 @@ public class ProductDiscountDTO {
     }
 
     // getters and setters
+
+
+    public List<Long> getProductIds() {
+        return productIds;
+    }
+
+    public void setProductIds(List<Long> productIds) {
+        this.productIds = productIds;
+    }
 
     public Long getId() {
         return id;

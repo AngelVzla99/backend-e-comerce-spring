@@ -1,5 +1,7 @@
 package com.example.springboot.service;
 
+import com.example.springboot.converter.CartItemConverter;
+import com.example.springboot.dto.CartItemDTO;
 import com.example.springboot.model.CartItemEntity;
 import com.example.springboot.model.ProductEntity;
 import com.example.springboot.repository.CartItemEntityRepository;
@@ -16,21 +18,12 @@ import java.util.Optional;
 public class CartItemService {
     @Autowired
     private CartItemEntityRepository cartItemRepository;
+    @Autowired
+    private CartItemConverter cartItemConverter;
 
-    public List<CartItemEntity> getAll() {
-        return cartItemRepository.findAll();
-    }
-
-    public Page<CartItemEntity> findAllPageable(Pageable pageable) {
-        return cartItemRepository.findAll(pageable);
-    }
-
-    public Optional<CartItemEntity> findById(Long id) {
-        return cartItemRepository.findById(id);
-    }
-
-    public CartItemEntity save(CartItemEntity productEntity) {
-        return cartItemRepository.save(productEntity);
+    public List<CartItemDTO> saveAll(List<CartItemDTO> cartItemEntities) {
+        List<CartItemEntity> entities = cartItemConverter.toEntityList(cartItemEntities);
+        return cartItemConverter.toDtoList( cartItemRepository.saveAll(entities) );
     }
 
     public void delete(Long id) {

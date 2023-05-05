@@ -26,12 +26,25 @@ public class CategoryEntity {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "product_category",
             joinColumns = {
-                    @JoinColumn(name = "product_id", referencedColumnName = "id",
+                    @JoinColumn(name = "category_id", referencedColumnName = "id",
                             nullable = false, updatable = false)},
             inverseJoinColumns = {
-                    @JoinColumn(name = "category_id", referencedColumnName = "id",
+                    @JoinColumn(name = "product_id", referencedColumnName = "id",
                             nullable = false, updatable = false)})
     private Set<ProductEntity> products = new HashSet<ProductEntity>();
+
+    public void addProduct( ProductEntity product ){ products.add(product); }
+
+    @Override
+    public String toString() {
+        return "CategoryEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", parent=" + parent +
+                ", children=" + children +
+                ", products=" + products +
+                '}';
+    }
 
     public CategoryEntity() {}
 

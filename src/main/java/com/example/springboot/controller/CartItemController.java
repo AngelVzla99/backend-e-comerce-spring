@@ -2,6 +2,7 @@ package com.example.springboot.controller;
 
 import com.example.springboot.converter.CartItemConverter;
 import com.example.springboot.dto.CartItemDTO;
+import com.example.springboot.dto.UserDTO;
 import com.example.springboot.model.CartItemEntity;
 import com.example.springboot.model.UserEntity;
 import com.example.springboot.pojo.UserCartUpdate;
@@ -33,13 +34,7 @@ public class CartItemController {
     @GetMapping()
     @ResponseBody
     public List<CartItemDTO> getCart(Principal principal) {
-        // only a user can modify his own cart
-        String email = principal.getName();
-        UserEntity user = userService
-                .findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The email of your token is not in the database"));
-        // convert entities to DTOs
-        return user.getCartItems().stream().map(cartItemConverter::toDTO).collect(Collectors.toList());
+        return userService.getCartItems(principal.getName());
     }
 
     // ===============
@@ -52,18 +47,6 @@ public class CartItemController {
             Principal principal,
             @RequestBody UserCartUpdate request
     ) {
-        // only a user can modify his own cart
-        String email = principal.getName();
-        UserEntity user = userService
-                .findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The email of your token is not in the database"));
-        // delete old products in the cart
-        user.getCartItems().stream().forEach(item -> cartItemService.delete(item.getId()));
-        // search the list of cart items
-        request.getProducts().stream().forEach(product -> product.setUserId(user.getId()));
-        List<CartItemEntity> newCartList = cartItemConverter
-                .toEntityList(request.getProducts());
-        // update the database
-        newCartList.stream().forEach(item -> cartItemService.save(item));
+        userService.updateUserCart( principal.getName(), request.getProducts() );
     }
 }

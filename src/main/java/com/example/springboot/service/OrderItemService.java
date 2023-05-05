@@ -1,5 +1,7 @@
 package com.example.springboot.service;
 
+import com.example.springboot.converter.OrderItemConverter;
+import com.example.springboot.dto.OrderItemDTO;
 import com.example.springboot.model.OrderEntity;
 import com.example.springboot.model.OrderItemEntity;
 import com.example.springboot.repository.OrderEntityRepository;
@@ -16,6 +18,15 @@ import java.util.Optional;
 public class OrderItemService {
     @Autowired
     private OrderItemEntityRepository orderItemRepository;
+    @Autowired
+    private OrderItemConverter orderItemConverter;
+
+    public List<OrderItemDTO> saveAll( List<OrderItemDTO> orderItems, OrderEntity orderEntity ){
+        List<OrderItemEntity> orderItemEntities = orderItemConverter
+                .toEntityList( orderItems, orderEntity );
+        List<OrderItemEntity> savedOrderItems = orderItemRepository.saveAll(orderItemEntities);
+        return orderItemConverter.toDtoList(savedOrderItems);
+    }
 
     public List<OrderItemEntity> getAll() {
         return orderItemRepository.findAll();

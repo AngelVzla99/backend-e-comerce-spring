@@ -1,11 +1,19 @@
 package com.example.springboot.service;
 
+import com.example.springboot.converter.ProductDiscountConverter;
+import com.example.springboot.dto.ProductDiscountDTO;
 import com.example.springboot.model.ProductDiscountEntity;
+import com.example.springboot.model.ProductEntity;
 import com.example.springboot.repository.ProductDiscountEntityRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,24 +22,36 @@ import java.util.Optional;
 public class ProductDiscountService {
     @Autowired
     ProductDiscountEntityRepository productDiscountEntityRepository;
+    @Autowired
+    ProductDiscountConverter productDiscountConverter;
 
-    public List<ProductDiscountEntity> getAll() {
-        return productDiscountEntityRepository.findAll();
+    public Page<ProductDiscountDTO> findAllPageable(Pageable pageable) {
+        Page<ProductDiscountEntity> responsePage = productDiscountEntityRepository.findAll(pageable);
+        if (!responsePage.hasContent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        // convert the resulting list to dto
+        return responsePage.map(productDiscountConverter::toDTO);
     }
 
-    public Page<ProductDiscountEntity> findAllPageable(Pageable pageable) {
-        return productDiscountEntityRepository.findAll(pageable);
+    public ProductDiscountDTO findById(Long id) {
+        Optional<ProductDiscountEntity> productDiscount = productDiscountEntityRepository.findById(id);
+        if (productDiscount.isPresent()) return productDiscountConverter.toDTO(productDiscount.get());
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    public Optional<ProductDiscountEntity> findById(Long id) {
-        return productDiscountEntityRepository.findById(id);
-    }
-
-    public ProductDiscountEntity save(ProductDiscountEntity user) {
-        return productDiscountEntityRepository.save(user);
+    @Transactional
+    public ProductDiscountDTO save(ProductDiscountDTO discount) {
+        ProductDiscountEntity productDiscountE = productDiscountConverter.toEntity(discount);
+        ProductDiscountEntity productDiscount = productDiscountEntityRepository.save(productDiscountE);
+        // set productDiscounts
+        productDiscount.getProducts().forEach(product -> product.setProductDiscount(productDiscount));
+        // save in the database
+        return productDiscountConverter.toDTO(productDiscount);
     }
 
     public void delete(Long id) {
+        if( productDiscountEntityRepository.findById(id).isEmpty() )
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"This discount doesn't exist");
         productDiscountEntityRepository.deleteById(id);
     }
 }

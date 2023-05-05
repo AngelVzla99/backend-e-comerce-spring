@@ -18,7 +18,7 @@ public class OrderEntity {
     @Column(name = "created_at")
     private Date createdAt;
 
-    @Column(name = "status_code")
+    @Column(name = "statuscode", nullable = false)
     private Integer statusCode;
 
     // other columns
@@ -27,17 +27,25 @@ public class OrderEntity {
     private List<OrderItemEntity> orderItems;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserEntity user;
 
     @ManyToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
     private AddressEntity address;
 
     @OneToMany(mappedBy = "order")
     private List<PaymentMethodEntity> paymentMethods;
 
     // getters and setters
+
+    public List<PaymentMethodEntity> getPaymentMethods() {
+        return paymentMethods;
+    }
+
+    public void setPaymentMethods(List<PaymentMethodEntity> paymentMethods) {
+        this.paymentMethods = paymentMethods;
+    }
 
     public Long getId() {
         return id;

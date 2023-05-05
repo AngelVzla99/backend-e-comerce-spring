@@ -53,4 +53,11 @@ public class CartItemConverter {
                 .map(this::toEntity)
                 .collect(Collectors.toList());
     }
+
+    public List<CartItemDTO> toDtoList(List<CartItemEntity> listCartItemDTO){
+        return listCartItemDTO
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
 }

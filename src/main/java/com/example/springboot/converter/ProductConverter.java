@@ -29,6 +29,8 @@ public class ProductConverter {
         dto.setId(product.getId());
 
         ProductDiscountEntity productDiscount = product.getProductDiscount();
+        if(productDiscount!=null)
+            System.out.println("\n\nProduct "+product.getId() + "\n"+productDiscount.toString());
         if( productDiscount != null ) dto.setDiscountId(productDiscount.getId());
 
         dto.setCategories(

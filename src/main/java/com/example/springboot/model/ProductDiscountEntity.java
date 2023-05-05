@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "product_discount")
@@ -25,6 +26,25 @@ public class ProductDiscountEntity {
 
     @Column
     private Boolean active;
+
+    // relations
+
+    @OneToMany(mappedBy = "productDiscount", cascade = CascadeType.PERSIST)
+    private List<ProductEntity> products;
+
+    public void addProduct( ProductEntity product ){products.add(product); }
+
+    @Override
+    public String toString() {
+        return "ProductDiscountEntity{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", expireAt=" + expireAt +
+                ", discountPercentage=" + discountPercentage +
+                ", active=" + active +
+                ", products=" + products +
+                '}';
+    }
 
     // constructors
 
@@ -53,6 +73,15 @@ public class ProductDiscountEntity {
     }
 
     // getters ans setters
+
+
+    public List<ProductEntity> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductEntity> products) {
+        this.products = products;
+    }
 
     public Long getId() {
         return id;

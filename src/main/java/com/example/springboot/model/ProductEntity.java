@@ -69,6 +69,30 @@ public class ProductEntity {
     @OneToMany(mappedBy = "product")
     private List<OrderItemEntity> orders;
 
+    @Override
+    public String toString() {
+        return "ProductEntity{" +
+                "id=" + id +
+                ", productDiscount=" + productDiscount +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", taxPercentage=" + taxPercentage +
+                ", quantity=" + quantity +
+                ", description='" + description + '\'' +
+                ", photoUrlSmall='" + photoUrlSmall + '\'' +
+                ", photoUrlMedium='" + photoUrlMedium + '\'' +
+                ", photoUrlBig='" + photoUrlBig + '\'' +
+                ", amount='" + amount + '\'' +
+                ", weight=" + weight +
+                ", height=" + height +
+                ", createdAt=" + createdAt +
+                ", productInventory=" + productInventory +
+                ", categories=" + categories +
+                ", cartItems=" + cartItems +
+                ", orders=" + orders +
+                '}';
+    }
+
     // constructors
     public ProductEntity() { }
 

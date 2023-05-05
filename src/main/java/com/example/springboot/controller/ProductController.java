@@ -32,18 +32,7 @@ public class ProductController {
     @GetMapping("/{id}")
     @ResponseBody
     public ProductDTO get(@PathVariable Long id) {
-        Optional<ProductEntity> product = productService.findById(id);
-        if (product.isPresent()) return productConverter.toDTO(product.get());
-        else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
-
-    @PreAuthorize("hasAnyRole('admin')")
-    @GetMapping("/all")
-    @ResponseBody
-    public List<ProductDTO> getAll() {
-        List<ProductEntity> entities = productService.getAll();
-        // convert all Entities to DTOs
-        return entities.stream().map(productConverter::toDTO).collect(Collectors.toList());
+        return productService.findById(id);
     }
 
     @PreAuthorize("hasAnyRole('admin')")
@@ -56,11 +45,7 @@ public class ProductController {
     ) {
         // request to the database using pagination
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<ProductEntity> responsePage = productService.findAllPageable(pageable);
-        if (!responsePage.hasContent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // convert the resulting list to dto
-        return responsePage.map(productConverter::toDTO);
+        return productService.findAllPageable(pageable);
     }
 
     // ===============
@@ -70,9 +55,8 @@ public class ProductController {
     @PreAuthorize("hasAnyRole('admin')")
     @PostMapping("/create")
     @ResponseBody
-    public ProductEntity create(@RequestBody ProductDTO productDTO) {
-        ProductEntity product = productConverter.toEntity(productDTO,null);
-        return productService.save(product);
+    public ProductDTO create(@RequestBody ProductDTO productDTO) {
+        return productService.save(productDTO);
     }
 
     // ================
@@ -83,8 +67,6 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @ResponseBody
     public void delete(@PathVariable Long id) {
-        if( productService.findById(id).isEmpty() )
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"This discount doesn't exist");
         productService.delete(id);
     }
 }

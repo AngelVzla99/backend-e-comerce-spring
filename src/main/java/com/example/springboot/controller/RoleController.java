@@ -35,22 +35,14 @@ public class RoleController {
     @GetMapping("/{id}")
     @ResponseBody
     public RoleDTO get(@PathVariable Long id){
-        RoleConverter mapper = new RoleConverter();
-        Optional<RoleEntity> roleEntity = roleService.findById(id);
-        if( roleEntity.isPresent() )  return mapper.toDTO(roleEntity.get());
-        else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return roleService.findById(id);
     }
 
     @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("/all")
     @ResponseBody
     public List<RoleDTO> getAll(){
-        RoleConverter mapper = new RoleConverter();
-        List<RoleEntity> roles = roleService.getAll();
-
-        // convert all roles Entities to DTOs
-        List<RoleDTO> roleDTOs = roles.stream().map(mapper::toDTO).collect(Collectors.toList());
-        return roleDTOs;
+        return roleService.findAll();
     }
 
     @PreAuthorize("hasAnyRole('admin')")
@@ -63,13 +55,7 @@ public class RoleController {
     ) {
         // request to the database using pagination
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<RoleEntity> roleEntityPage = roleService.findAllPageable(pageable);
-        if( !roleEntityPage.hasContent() )
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // convert the resulting list to dto
-        RoleConverter mapper = new RoleConverter();
-        Page<RoleDTO> roleDTOs = roleEntityPage.map(mapper::toDTO);
-        return roleDTOs;
+        return roleService.findAllPageable(pageable);
     }
 
     // ===============
@@ -79,13 +65,8 @@ public class RoleController {
     @PreAuthorize("hasAnyRole('admin')")
     @PostMapping("/create")
     @ResponseBody
-    public RoleEntity create(@RequestBody RoleDTO roleDTO) {
-        RoleConverter roleConverter = new RoleConverter();
-        // users for this role
-        Set<UserEntity> users = new HashSet<>();
-
-        RoleEntity roleEntity = roleConverter.toEntity(roleDTO,users);
-        return roleService.save( roleEntity );
+    public RoleDTO create(@RequestBody RoleDTO roleDTO) {
+        return roleService.save(roleDTO);
     }
 
     // ================
@@ -96,8 +77,6 @@ public class RoleController {
     @DeleteMapping("/{id}")
     @ResponseBody
     public void delete(@PathVariable Long id){
-        if(roleService.findById(id).isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"There is no role with id "+id);
         roleService.delete(id);
     }
 

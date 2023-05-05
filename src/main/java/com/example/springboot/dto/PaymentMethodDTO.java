@@ -1,78 +1,19 @@
-package com.example.springboot.model;
-
-import jakarta.persistence.*;
+package com.example.springboot.dto;
 
 import java.util.Date;
 
-@Entity
-@Table(name = "payment_method")
-public class PaymentMethodEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "order_id")
-    private OrderEntity order;
-
-    @Column(name = "type", nullable = false)
+public class PaymentMethodDTO {
     private String type;
-
-    @Column(name = "amount", nullable = false)
     private Long amount;
-
-    @Column(name = "payment_user_id")
     private String paymentUserId;
-
-    @Column(name = "payment_id")
     private String paymentId;
-
-    @Column(name = "payed_at")
     private Date payedAt;
-
-    @Column(name = "expire_at")
     private Date expireAt;
-
-    @Column(name = "isconfirmed", nullable = false)
     private Boolean isConfirmed;
-
-    @Column(name = "description", nullable = false)
     private String description;
-
-    @Column(name = "currency", nullable = false)
     private String currency;
 
-    public PaymentMethodEntity() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-    public OrderEntity getOrder() {
-        return order;
-    }
-
-    public void setOrder(OrderEntity order) {
-        this.order = order;
-    }
+    public PaymentMethodDTO() {}
 
     public String getType() {
         return type;

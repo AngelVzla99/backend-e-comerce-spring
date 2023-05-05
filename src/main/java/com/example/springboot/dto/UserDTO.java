@@ -19,6 +19,7 @@ public class UserDTO {
     private String password;
 
     private List<Long> roles;
+    private List<CartItemDTO> cartItems;
 
     @Override
     public String toString() {
@@ -59,7 +60,6 @@ public class UserDTO {
     // ===========================
     //   getters and setters    //
     // ===========================
-
 
     public Long getId() {
         return id;
