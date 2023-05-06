@@ -1,5 +1,6 @@
 package com.example.springboot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -27,13 +28,6 @@ public class ProductDiscountEntity {
     @Column
     private Boolean active;
 
-    // relations
-
-    @OneToMany(mappedBy = "productDiscount", cascade = CascadeType.PERSIST)
-    private List<ProductEntity> products;
-
-    public void addProduct( ProductEntity product ){products.add(product); }
-
     @Override
     public String toString() {
         return "ProductDiscountEntity{" +
@@ -42,7 +36,6 @@ public class ProductDiscountEntity {
                 ", expireAt=" + expireAt +
                 ", discountPercentage=" + discountPercentage +
                 ", active=" + active +
-                ", products=" + products +
                 '}';
     }
 
@@ -73,15 +66,6 @@ public class ProductDiscountEntity {
     }
 
     // getters ans setters
-
-
-    public List<ProductEntity> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductEntity> products) {
-        this.products = products;
-    }
 
     public Long getId() {
         return id;

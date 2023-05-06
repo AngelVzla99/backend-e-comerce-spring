@@ -17,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,10 +88,9 @@ public class UserService {
 
     public UserDTO saveCustomer(UserDTO user){
         // Search each role in the database
-        Set<RoleDTO> roles = new HashSet<>();
-        RoleDTO role = roleService.findByRoleNameOrCreate("customer");
-        roles.add(role);
-        Set<RoleEntity> roleEntities = roles.stream().map(roleConverter::toEntity).collect(Collectors.toSet());
+        RoleEntity role = roleService.findByRoleNameOrCreate("customer");
+        Set<RoleEntity> roleEntities = new HashSet<>();
+        roleEntities.add( role );
 
         // convert DTO to Entity
         UserEntity userEntity = userConverter.toEntity(user, roleEntities);
@@ -138,4 +134,9 @@ public class UserService {
     public void delete(Long id) {
         userEntityRepository.deleteById(id);
     }
+
+    // =============================
+    //    method to get entities  //
+    // =============================
+
 }

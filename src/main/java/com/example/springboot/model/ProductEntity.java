@@ -1,5 +1,6 @@
 package com.example.springboot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -16,6 +17,7 @@ public class ProductEntity {
 
     @ManyToOne
     @JoinColumn(name = "discount_id", referencedColumnName = "id")
+    @JsonIgnoreProperties("products")
     private ProductDiscountEntity productDiscount;
 
     @Column(name = "name", nullable = false, length = 50)
@@ -57,16 +59,16 @@ public class ProductEntity {
 
     // add other columns
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ProductInventoryEntity> productInventory = Collections.emptyList();
 
     @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     private Set<CategoryEntity> categories = new HashSet<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<CartItemEntity> cartItems;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderItemEntity> orders;
 
     @Override
@@ -114,6 +116,7 @@ public class ProductEntity {
 
     // getters ans setters
 
+    public void addToQuantity( Integer value ){ this.quantity += value; }
 
     public List<ProductInventoryEntity> getProductInventory() {
         return productInventory;

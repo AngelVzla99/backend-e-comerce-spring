@@ -7,6 +7,7 @@ import com.example.springboot.model.UserEntity;
 import com.example.springboot.pojo.UserRequestAddRole;
 import com.example.springboot.service.RoleService;
 import com.example.springboot.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,13 +43,13 @@ public class UserController {
     @PreAuthorize("hasAnyRole('admin')")
     @PostMapping("/create-user")
     @ResponseBody
-    public UserDTO createUserAdmin(@RequestBody UserDTO user) {
+    public UserDTO createUserAdmin( @Valid @RequestBody UserDTO user) {
         return userService.save(user);
     }
 
     @PostMapping("/create-customer")
     @ResponseBody
-    public UserDTO createUser(@RequestBody UserDTO user) {
+    public UserDTO createUser( @Valid @RequestBody UserDTO user) {
         return userService.saveCustomer(user);
     }
 

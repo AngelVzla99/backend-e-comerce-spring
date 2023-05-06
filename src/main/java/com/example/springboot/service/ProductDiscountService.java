@@ -5,6 +5,7 @@ import com.example.springboot.dto.ProductDiscountDTO;
 import com.example.springboot.model.ProductDiscountEntity;
 import com.example.springboot.model.ProductEntity;
 import com.example.springboot.repository.ProductDiscountEntityRepository;
+import com.example.springboot.repository.ProductEntityRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,8 @@ public class ProductDiscountService {
     ProductDiscountEntityRepository productDiscountEntityRepository;
     @Autowired
     ProductDiscountConverter productDiscountConverter;
+    @Autowired
+    ProductEntityRepository productEntityRepository;
 
     public Page<ProductDiscountDTO> findAllPageable(Pageable pageable) {
         Page<ProductDiscountEntity> responsePage = productDiscountEntityRepository.findAll(pageable);
@@ -43,9 +47,15 @@ public class ProductDiscountService {
     public ProductDiscountDTO save(ProductDiscountDTO discount) {
         ProductDiscountEntity productDiscountE = productDiscountConverter.toEntity(discount);
         ProductDiscountEntity productDiscount = productDiscountEntityRepository.save(productDiscountE);
-        // set productDiscounts
-        productDiscount.getProducts().forEach(product -> product.setProductDiscount(productDiscount));
-        // save in the database
+        // === set productDiscounts ===
+        List<ProductEntity> products = productEntityRepository.findByIdIn(discount.getProductIds());
+        // if some products are not found => 404
+        List<Long> diff = new LinkedList<>(discount.getProductIds()); // linkedList => hash table for removeAll
+        diff.removeAll( products.stream().map(ProductEntity::getId).toList() );
+        if(diff.size()>0)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The products with ids "+ diff  +" was not found");
+        products.forEach(product -> product.setProductDiscount(productDiscount));
+        // === save in the database ===
         return productDiscountConverter.toDTO(productDiscount);
     }
 

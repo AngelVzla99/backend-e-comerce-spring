@@ -1,11 +1,18 @@
 package com.example.springboot.dto;
 
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class OrderItemDTO {
+    @NotNull()
     private Long productId;
+    @NotNull()
     private BigDecimal purchasePrice;
+    @NotNull()
+    @Positive(message = "quantity should be positive")
     private Integer quantity;
 
     public OrderItemDTO() {}

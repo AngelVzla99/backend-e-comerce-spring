@@ -1,25 +1,34 @@
 package com.example.springboot.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class UserDTO {
     private Long id;
-
+    @NotBlank(message = "User first name is required")
+    @Size(min = 2, max = 50, message = "The first name must be between 2 and 50 characters")
     private  String firstName;
-
+    @Size(min = 2, max = 50, message = "The last name must be between 2 and 50 characters")
+    @NotBlank(message = "User last name is required")
     private  String lastName;
-
     private Date createdAt;
-
+    @NotBlank(message = "The email is required")
+    @Email(message = "Please provide a valid email address")
+    @Size(max = 50, message = "The email must have at most 50 characters")
     private  String email;
-
+    @Size(min = 2, max = 50, message = "The phone number must be between 2 and 50 characters")
+    @NotBlank(message = "The phone number is required")
     private  String phoneNumber;
-
+    @Size(min = 5, max = 50, message = "The password must be between 5 and 50 characters")
+    @NotBlank(message = "The user password is required")
     private String password;
-
-    private List<Long> roles;
-    private List<CartItemDTO> cartItems;
+    private List<Long> roles = Collections.emptyList();
+    private List<CartItemDTO> cartItems = Collections.emptyList();
 
     @Override
     public String toString() {
@@ -34,6 +43,9 @@ public class UserDTO {
         for ( Long id : roles ) ans += id + " ";
         ans += " }";
         return ans;
+    }
+
+    public UserDTO() {
     }
 
     public UserDTO(Long id, String firstName, String lastName, String email, String phoneNumber, String password, List<Long> roles) {
@@ -60,6 +72,15 @@ public class UserDTO {
     // ===========================
     //   getters and setters    //
     // ===========================
+
+
+    public List<CartItemDTO> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItemDTO> cartItems) {
+        this.cartItems = cartItems;
+    }
 
     public Long getId() {
         return id;

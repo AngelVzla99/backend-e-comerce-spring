@@ -2,7 +2,6 @@ package com.example.springboot.service;
 
 import com.example.springboot.converter.ProductConverter;
 import com.example.springboot.dto.ProductDTO;
-import com.example.springboot.model.ProductDiscountEntity;
 import com.example.springboot.model.ProductEntity;
 import com.example.springboot.repository.ProductEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

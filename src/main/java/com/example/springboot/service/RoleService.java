@@ -39,14 +39,14 @@ public class RoleService {
     }
 
 
-    public RoleDTO findByRoleNameOrCreate(String roleName){
+    public RoleEntity findByRoleNameOrCreate(String roleName){
         Optional<RoleEntity> role = roleEntityRepository.findOneByRoleName(roleName);
         if(role.isEmpty()){
-            RoleDTO newRole = new RoleDTO();
+            RoleEntity newRole = new RoleEntity();
             newRole.setRoleName(roleName);
-            return save(newRole);
+            return roleEntityRepository.save(newRole);
         }else{
-            return roleConverter.toDTO(role.get());
+            return role.get();
         }
     }
 

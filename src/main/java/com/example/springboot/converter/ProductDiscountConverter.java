@@ -31,24 +31,11 @@ public class ProductDiscountConverter {
 
     public ProductDiscountDTO toDTO(ProductDiscountEntity productDiscount) {
         ProductDiscountDTO dto = modelMapper.map(productDiscount, ProductDiscountDTO.class);
-        dto.setProductIds(
-                productDiscount.getProducts().stream().map(ProductEntity::getId).collect(Collectors.toList())
-        );
         return dto;
     }
 
     public ProductDiscountEntity toEntity(ProductDiscountDTO productDiscount) {
         ProductDiscountEntity entity = modelMapper.map(productDiscount, ProductDiscountEntity.class);
-        List<ProductEntity> products = productRepository
-                .findByIdIn(productDiscount.getProductIds());
-
-        // if some products are not found => 404
-        List<Long> diff = new LinkedList<>(productDiscount.getProductIds()); // linkedList => hash table for removeAll
-        diff.removeAll( products.stream().map(ProductEntity::getId).toList() );
-        if(diff.size()>0)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The products with ids "+ diff  +" was not found");
-
-        entity.setProducts(products);
         return entity;
     }
 }

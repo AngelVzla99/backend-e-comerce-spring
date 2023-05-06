@@ -16,23 +16,23 @@ public class UserEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 50, nullable = false)
     private  String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 50, nullable = false)
     private  String lastName;
 
     @CreationTimestamp
     @Column(name = "created_at")
     private Date createdAt = new Date();
 
-    @Column()
+    @Column(name = "email", length = 50, nullable = false)
     private  String email;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 50, nullable = false)
     private  String phoneNumber;
 
-    @Column()
+    @Column(name = "password", length = 50, nullable = false)
     private  String password;
 
     // other relations

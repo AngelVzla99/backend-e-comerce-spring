@@ -18,7 +18,7 @@ public class CategoryEntity {
     @JoinColumn(name = "parent_category")
     private CategoryEntity parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CategoryEntity> children = Collections.emptyList();
 
     // others columns
