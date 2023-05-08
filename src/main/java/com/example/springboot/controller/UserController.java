@@ -44,12 +44,16 @@ public class UserController {
     @PostMapping("/create-user")
     @ResponseBody
     public UserDTO createUserAdmin( @Valid @RequestBody UserDTO user) {
+        if( userService.isEmailInDataBase(user.getEmail()) )
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "The email is already in the database");
         return userService.save(user);
     }
 
     @PostMapping("/create-customer")
     @ResponseBody
     public UserDTO createUser( @Valid @RequestBody UserDTO user) {
+        if( userService.isEmailInDataBase(user.getEmail()) )
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "The email is already in the database");
         return userService.saveCustomer(user);
     }
 
@@ -66,8 +70,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public String deleteUser(@PathVariable Long id) {
+    public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
-        return "ok";
     }
 }

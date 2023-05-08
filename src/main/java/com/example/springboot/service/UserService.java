@@ -61,6 +61,10 @@ public class UserService {
         return userConverter.toDTO(userEntityRepository.save(userEntity));
     }
 
+    public boolean isEmailInDataBase(String email){
+        Optional<UserEntity> user = userEntityRepository.findOneByEmail(email);
+        return user.isPresent();
+    }
     public UserDTO findByEmail(String email){
         Optional<UserEntity> user = userEntityRepository.findOneByEmail(email);
         if (user.isPresent()) return userConverter.toDTO(user.get());

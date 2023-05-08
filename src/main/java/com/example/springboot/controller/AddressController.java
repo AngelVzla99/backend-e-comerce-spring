@@ -3,14 +3,10 @@ package com.example.springboot.controller;
 import com.example.springboot.converter.AddressConverter;
 import com.example.springboot.dto.AddressDTO;
 import com.example.springboot.dto.UserDTO;
-import com.example.springboot.model.AddressEntity;
-import com.example.springboot.model.UserEntity;
 import com.example.springboot.service.AddressService;
 import com.example.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;

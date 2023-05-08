@@ -23,7 +23,7 @@ public class OrderEntity {
 
     // other columns
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
     private List<OrderItemEntity> orderItems;
 
     @ManyToOne
@@ -34,7 +34,7 @@ public class OrderEntity {
     @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
     private AddressEntity address;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
     private List<PaymentMethodEntity> paymentMethods;
 
     // getters and setters

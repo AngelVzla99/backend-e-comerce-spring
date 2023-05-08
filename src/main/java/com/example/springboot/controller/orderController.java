@@ -1,7 +1,9 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dto.OrderDTO;
+import com.example.springboot.dto.UserDTO;
 import com.example.springboot.service.OrderService;
+import com.example.springboot.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 /**
  * Status codes:
@@ -26,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 public class orderController {
     @Autowired
     OrderService orderService;
+    @Autowired
+    UserService userService;
 
     // ===============
     //    get EPs   //
@@ -55,10 +61,11 @@ public class orderController {
     //   post EPs   //
     // ===============
 
-    @PreAuthorize("hasAnyRole('admin')")
     @PostMapping("/create")
     @ResponseBody
-    public OrderDTO save( @Valid @RequestBody OrderDTO orderDTO) {
+    public OrderDTO save(Principal principal, @Valid @RequestBody OrderDTO orderDTO) {
+        UserDTO user = userService.findByEmailToken(principal.getName());
+        orderDTO.setUserId(user.getId());
         return orderService.createOrder(orderDTO);
     }
 

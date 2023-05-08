@@ -12,7 +12,7 @@ public class AddressEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
@@ -33,7 +33,7 @@ public class AddressEntity {
 
     // relations
 
-    @OneToMany(mappedBy = "address")
+    @OneToMany(mappedBy = "address", cascade = CascadeType.REMOVE)
     private List<OrderEntity> orders;
 
     // getters and setters

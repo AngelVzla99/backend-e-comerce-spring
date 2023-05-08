@@ -36,7 +36,7 @@ public class UserEntity {
     private  String password;
 
     // other relations
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = {
                     @JoinColumn(name = "user_id", referencedColumnName = "id",
@@ -46,10 +46,10 @@ public class UserEntity {
                             nullable = false, updatable = false)})
     private Set<RoleEntity> roles = new HashSet<RoleEntity>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<CartItemEntity> cartItems;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<AddressEntity> addresses;
 
     // to string
@@ -67,10 +67,10 @@ public class UserEntity {
                 '}';
     }
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<OrderEntity> orders;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<PaymentMethodEntity> paymentMethods;
 
     // constructors

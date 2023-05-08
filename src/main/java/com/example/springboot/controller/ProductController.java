@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,9 +55,9 @@ public class ProductController {
 
     @PreAuthorize("hasAnyRole('admin')")
     @PostMapping("/create")
-    @ResponseBody
-    public ProductDTO create(@RequestBody ProductDTO productDTO) {
-        return productService.save(productDTO);
+    public ResponseEntity<ProductDTO> create(@RequestBody ProductDTO productDTO) {
+        return new ResponseEntity<>(productService.save(productDTO),HttpStatus.CREATED);
+
     }
 
     // ================
@@ -65,7 +66,6 @@ public class ProductController {
 
     @PreAuthorize("hasAnyRole('admin')")
     @DeleteMapping("/{id}")
-    @ResponseBody
     public void delete(@PathVariable Long id) {
         productService.delete(id);
     }

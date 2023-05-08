@@ -35,3 +35,4 @@ build/
 *.jar
 .settings/
 db-data/
+test-db-data/

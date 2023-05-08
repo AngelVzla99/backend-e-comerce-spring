@@ -9,6 +9,19 @@ public class AddressDTO {
     private String city;
     private String country;
 
+    @Override
+    public String toString() {
+        return "AddressDTO{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", name='" + name + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                '}';
+    }
+
     // getters and setters
 
     public Long getId() {
