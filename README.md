@@ -4,17 +4,25 @@ Basic backend for an e-commerce made in spring boot using a SQL database.
 # Technology
 * JPA and Hibernate - ORM to map the SQL model
 * Flyway - To handle migrations in the database
-* JWT - user authentication and authorization 
+* JWT - User authentication and authorization
+* JUnit - For integration testing
+* OpenAPI 3.0 and springDocs - REST API documentation
 
 # Database information
 
-* The DBMS used is Postgres ( the relational model can be found in src/main/resources/db.migration/V1__Create_first_table.sql ).
-* I'm creating the database in a docker container (can be found in the docker-compose file). 
+The DBMS used is Postgres ( the relational model can be found in src/main/resources/db.migration/V1__Create_first_table.sql ). I'm creating the database in a docker container (can be found in the docker-compose file).
+
+# Documentation
+The documentation is generated using springDocs, you can see all the endpoints in the following link after running the server
+
+```
+http://BASE_URL/docs/swagger-ui/index.html
+```
 
 # Run and test the server locally
 
 ## Running the server
-Requires Maven and Java11+ to run.
+Requires Maven and Java17+ to run.
 ```sh
 $ cd backend-e-commerce
 $ mvn clean install

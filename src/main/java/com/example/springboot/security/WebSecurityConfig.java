@@ -41,15 +41,21 @@ public class WebSecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                 // public endpoints
-                .requestMatchers("/api/users/create-customer").permitAll()
+                .requestMatchers(
+                        "/api/users/create-customer",
+                        "/docs/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/health"
+                )
+                .permitAll()
                 // private endpoints
                 .anyRequest()
-                    .authenticated()
-                    .and()
+                .authenticated()
+                .and()
                 // user sessions
                 .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 // JWT authentication and logic to validate the token
                 .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).and()
                 .addFilter(jwtAuthenticationFilter)

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
@@ -20,6 +21,15 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ExceptionControllerAdvice {
+
+    @ExceptionHandler({
+            NoHandlerFoundException.class, // Spring MVC page not found exception
+            HttpRequestMethodNotSupportedException.class // Unsupported HTTP method exception
+    })
+    public ResponseEntity<Object> handlePageNotFoundException(Exception ex, WebRequest request) {
+        ErrorResponse errorResponse = new MyErrorResponse("Page not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request) {
@@ -37,12 +47,6 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<ErrorResponse> handleBadRequestException(ResponseStatusException ex) {
         ErrorResponse errorResponse = new MyErrorResponse(ex.getReason(), (HttpStatus) ex.getStatusCode());
         return new ResponseEntity<>(errorResponse, ex.getStatusCode());
-    }
-
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorResponse> handleMethodNotAllowedException(HttpRequestMethodNotSupportedException ex) {
-        ErrorResponse errorResponse = new MyErrorResponse(ex.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
-        return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(HttpMessageConversionException.class)
@@ -65,6 +69,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
+        System.out.println("\n\n=>"+ex.toString());
         ErrorResponse errorResponse = new MyErrorResponse(
                 "Internal Server Error\n" + ex.toString(),
                 HttpStatus.INTERNAL_SERVER_ERROR
