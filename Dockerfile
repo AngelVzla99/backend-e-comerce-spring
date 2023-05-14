@@ -1,17 +1,15 @@
-#
-# Build stage
-#
-FROM openjdk:17-jdk-slim-buster as build   
-WORKDIR /app
-COPY . .
-RUN mvn clean package -DskipTests
+# Use as image
+FROM openjdk:17-jdk-slim-buster
 
-#
-# Package stage
-#
-FROM adoptopenjdk:17-jre-hotspot
+# Set the working directory
 WORKDIR /app
-COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar demo.jar
-# ENV PORT=8080
+
+# Copy the Spring Boot jar file to the container
+COPY target/backend.jar /app/backend.jar
+
+# Expose port 8080 for the app
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","demo.jar"]
+
+# Set the command to start the Spring Boot app
+CMD ["java", "-jar", "/app/my-spring-app.jar"]
+
