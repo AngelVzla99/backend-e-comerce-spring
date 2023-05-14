@@ -1,7 +1,7 @@
 #
 # Build stage
 #
-FROM adoptopenjdk:17-jdk-hotspot AS build
+FROM amazoncorretto:16.0.2-maven-3.8.1 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
