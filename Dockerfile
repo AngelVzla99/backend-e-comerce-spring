@@ -11,5 +11,5 @@ COPY target/backend.jar /app/backend.jar
 EXPOSE 8080
 
 # Set the command to start the Spring Boot app
-CMD ["java", "-jar", "/app/my-spring-app.jar"]
+CMD ["java", "-jar", "/app/backend.jar"]
 
