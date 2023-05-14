@@ -1,15 +1,11 @@
-#
-# Build stage
-#
-FROM maven:3.8.2-jdk-17 AS build
-COPY . .
-RUN mvn clean package -DskipTests
+FROM openjdk:17-jdk-alpine
 
-#
-# Package stage
-#
-FROM openjdk:17-jdk-slim
-COPY --from=build /target/demo-0.0.1-SNAPSHOT.jar demo.jar
-# ENV PORT=8080
+VOLUME /tmp
+
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","demo.jar"]
+
+ARG JAR_FILE=target/*.jar
+
+COPY ${JAR_FILE} app.jar
+
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
