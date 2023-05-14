@@ -13,7 +13,7 @@ Basic backend for an e-commerce made in spring boot using a SQL database.
 The DBMS used is Postgres ( the relational model can be found in src/main/resources/db.migration/V1__Create_first_table.sql ). I'm creating the database in a docker container (can be found in the docker-compose file).
 
 # Documentation
-The documentation is generated using springDocs, you can see all the endpoints in the following link after running the server
+The documentation is generated using springDocs, you can see all the endpoints in the following link after the server running
 
 ```
 http://BASE_URL/docs/swagger-ui/index.html
