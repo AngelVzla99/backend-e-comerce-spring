@@ -1,14 +1,17 @@
-# Use a base image with an appropriate version of the JVM installed
-FROM openjdk:17-jdk-alpine
-
-# Set the working directory to /app
+#
+# Build stage
+#
+FROM maven:3.8.3-openjdk-11 AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy the application JAR file into the container
-COPY target/back-end.jar /app/back-end.jar
-
-# Expose port 8080
+#
+# Package stage
+#
+FROM adoptopenjdk/openjdk11:alpine-jre
+WORKDIR /app
+COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar demo.jar
+# ENV PORT=8080
 EXPOSE 8080
-
-# Set the command to run the application when the container starts
-CMD ["java", "-jar", "my-spring-boot-app.jar"]
+ENTRYPOINT ["java","-jar","demo.jar"]
