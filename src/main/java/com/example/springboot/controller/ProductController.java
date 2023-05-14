@@ -29,6 +29,23 @@ public class ProductController {
     @Autowired
     ProductConverter productConverter;
 
+    // ===============
+    //    get EPs   //
+    // ===============
+
+    @GetMapping("/search-by-text")
+    @ResponseBody
+    public Page<ProductDTO> getByText(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy
+    ){
+        // request to the database using pagination
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return productService.findByText(query,pageable);
+    }
+
     @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("/{id}")
     @ResponseBody
@@ -39,7 +56,7 @@ public class ProductController {
     @PreAuthorize("hasAnyRole('admin')")
     @GetMapping()
     @ResponseBody
-    public Page<ProductDTO> getAllRoles(
+    public Page<ProductDTO> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy

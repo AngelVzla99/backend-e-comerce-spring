@@ -2,12 +2,14 @@ package com.example.springboot.service;
 
 import com.example.springboot.converter.CategoryConverter;
 import com.example.springboot.dto.CategoryDTO;
+import com.example.springboot.dto.ProductDTO;
 import com.example.springboot.model.CategoryEntity;
 import com.example.springboot.model.ProductEntity;
 import com.example.springboot.repository.CategoryEntityRepository;
 import com.example.springboot.repository.ProductEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,12 @@ public class CategoryService {
     private CategoryEntityRepository categoryRepository;
     @Autowired
     private CategoryConverter categoryConverter;
+
+    public List<CategoryDTO> findFirstCategories(int x) {
+        Pageable pageable = PageRequest.of(0, x);
+        List<CategoryEntity> categories = categoryRepository.findAll(pageable).getContent();
+        return categoryConverter.entityToDTOList(categories);
+    }
 
     public Page<CategoryDTO> findAllPageable(Pageable pageable) {
         Page<CategoryEntity> entitiesPage = categoryRepository.findAll(pageable);

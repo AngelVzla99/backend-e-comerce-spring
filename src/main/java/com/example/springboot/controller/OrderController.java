@@ -27,7 +27,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/orders")
-public class orderController {
+public class OrderController {
     @Autowired
     OrderService orderService;
     @Autowired

@@ -43,6 +43,8 @@ public class WebSecurityConfig {
                 // public endpoints
                 .requestMatchers(
                         "/api/users/create-customer",
+                        "/api/products/search-by-text/**",
+                        "/api/home/**",
                         "/docs/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/health"

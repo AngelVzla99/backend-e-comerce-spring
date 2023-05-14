@@ -1,9 +1,8 @@
 package com.example.springboot.converter;
 
+import com.example.springboot.dto.PaymentMethodDTO;
 import com.example.springboot.dto.ProductDTO;
-import com.example.springboot.model.CategoryEntity;
-import com.example.springboot.model.ProductDiscountEntity;
-import com.example.springboot.model.ProductEntity;
+import com.example.springboot.model.*;
 import com.example.springboot.repository.CategoryEntityRepository;
 import com.example.springboot.repository.ProductEntityRepository;
 import org.springframework.http.HttpStatus;
@@ -79,5 +78,10 @@ public class ProductConverter {
         product.setCategories(categories);
         return product;
     }
+
+    public List<ProductDTO> toDtoList(List<ProductEntity> entities){
+        return entities.stream().map(this::toDTO).toList();
+    }
+
 }
 
