@@ -1,15 +1,6 @@
-#
-# Build stage
-#
-FROM maven:3.8.2-openjdk-17 AS build
-COPY . .
-RUN mvn clean package -DskipTests
-
-#
-# Package stage
-#
 FROM openjdk:17-jdk-slim
-COPY --from=build /target/spring-boot-0.0.1-SNAPSHOT.jar demo.jar
-# ENV PORT=8080
+COPY . /app
+WORKDIR /app
+RUN ./mvnw clean package -DskipTests && ls /target
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","demo.jar"]
+ENTRYPOINT ["java","-jar","/target/spring-boot-0.0.1-SNAPSHOT.jar"]
