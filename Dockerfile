@@ -1,3 +1,4 @@
+RUN curl -s checkip.amazonaws.com
 #
 # Build stage
 #
