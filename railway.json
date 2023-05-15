@@ -6,7 +6,7 @@
   },
   "deploy": {
     "startCommand": "docker run -p 8080:8080 backend",
-    "healthcheckPath": "/",
+    "healthcheckPath": "/health",
     "healthcheckTimeout": 100,
     "restartPolicyType": "never"
   }
