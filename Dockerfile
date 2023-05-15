@@ -1,9 +1,9 @@
-RUN curl -s checkip.amazonaws.com
 #
 # Build stage
 #
 FROM maven:3.8.2-openjdk-17 AS build
 COPY . .
+RUN curl -s checkip.amazonaws.com
 RUN mvn clean package -DskipTests
 
 #
