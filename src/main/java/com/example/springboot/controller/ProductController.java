@@ -46,7 +46,6 @@ public class ProductController {
         return productService.findByText(query,pageable);
     }
 
-    @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("/{id}")
     @ResponseBody
     public ProductDTO get(@PathVariable Long id) {

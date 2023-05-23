@@ -2,6 +2,7 @@ package com.example.springboot.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -49,6 +50,8 @@ public class WebSecurityConfig {
                         "/v3/api-docs/**",
                         "/health"
                 )
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/{id}")
                 .permitAll()
                 // private endpoints
                 .anyRequest()
