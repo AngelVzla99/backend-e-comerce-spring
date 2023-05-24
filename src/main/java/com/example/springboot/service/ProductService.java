@@ -29,6 +29,10 @@ public class ProductService {
         return productConverter.toDtoList(products);
     }
 
+    public Long countProducts(){
+        return productRepository.count();
+    }
+
     public Page<ProductDTO> findByText( String query, Pageable pageable ){
         Page<ProductEntity> products = productRepository.findByNameContainingOrDescriptionContaining(query,query,pageable);
         return products.map(productConverter::toDTO);

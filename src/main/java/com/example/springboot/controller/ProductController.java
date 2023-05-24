@@ -65,6 +65,11 @@ public class ProductController {
         return productService.findAllPageable(pageable);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> countProducts() {
+        return ResponseEntity.ok( productService.countProducts() );
+    }
+
     // ===============
     //   post EPs   //
     // ===============

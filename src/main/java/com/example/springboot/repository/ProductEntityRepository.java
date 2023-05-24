@@ -13,6 +13,5 @@ public interface ProductEntityRepository extends JpaRepository<ProductEntity, Lo
 
     Page<ProductEntity> findAll(Pageable pageable);
     List<ProductEntity> findByIdIn(List<Long> ids);
-
     Page<ProductEntity> findByNameContainingOrDescriptionContaining( String name, String description, Pageable pageable);
 }
