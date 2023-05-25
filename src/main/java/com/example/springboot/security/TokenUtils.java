@@ -1,8 +1,10 @@
 package com.example.springboot.security;
 
+import com.example.springboot.dto.UserDTO;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -62,6 +64,24 @@ public class TokenUtils {
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
+                .setIssuedAt(new Date())
+                .setExpiration(expirationDate)
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
+                .compact();
+    }
+
+    public static String createTokenUser(String email, Set<SimpleGrantedAuthority> authoritiesList){
+        long expirationTime = TOKEN_VALIDITY*1000;
+        Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
+
+        // save in the token the authorities of the user
+        String authorities = authoritiesList.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        return Jwts.builder()
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
                 .claim(AUTHORITIES_KEY, authorities)

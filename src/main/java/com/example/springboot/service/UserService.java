@@ -12,8 +12,14 @@ import com.example.springboot.model.RoleEntity;
 import com.example.springboot.model.UserEntity;
 import com.example.springboot.repository.RoleEntityRepository;
 import com.example.springboot.repository.UserEntityRepository;
+import com.example.springboot.security.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -137,6 +143,20 @@ public class UserService {
 
     public void delete(Long id) {
         userEntityRepository.deleteById(id);
+    }
+
+    public String getUserToken(String email, String password) throws UsernameNotFoundException {
+        // get user data
+        UserEntity user = findUserByEmail(email);
+        // bad password
+        if (! new BCryptPasswordEncoder().matches(password, user.getPassword()))
+            throw new UsernameNotFoundException("The user with email "+email+" does not exist");
+        // get roles
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
+        });
+        return TokenUtils.createTokenUser(email,authorities);
     }
 
     // =============================

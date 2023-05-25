@@ -38,6 +38,8 @@ public class WebSecurityConfig {
         jwtAuthenticationFilter.setFilterProcessesUrl("/login");
 
         return http
+                .cors()
+                .and()
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
@@ -48,7 +50,8 @@ public class WebSecurityConfig {
                         "/api/home/**",
                         "/docs/swagger-ui/**",
                         "/v3/api-docs/**",
-                        "/health"
+                        "/health",
+                        "/login"
                 )
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/{id}")
@@ -63,7 +66,6 @@ public class WebSecurityConfig {
                 .and()
                 // JWT authentication and logic to validate the token
                 .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).and()
-                .addFilter(jwtAuthenticationFilter)
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
