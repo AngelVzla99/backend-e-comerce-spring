@@ -1,7 +1,7 @@
 # Backend Spring Boot Rest Api 
 Basic backend for an e-commerce made in spring boot using a SQL database.
 
-You can see the endpoints documentation in the following [link (wait 2 minutes and refresh)](https://angel-garces-front-end-e-commerce.onrender.com)
+You can see the endpoints documentation in the following [link (wait 2 minutes and refresh)](https://angel-garces-back-end-e-commerce.onrender.com/docs/swagger-ui/index.html)
 
 Also, you can check the front-end of the application in this [link ](https://github.com/AngelVzla99/front-end-e-commerce-next)
 
