@@ -60,5 +60,6 @@ The data will be saved in a volume folder db-data
 
 # TODO
 
-* Save user image (?) 
-* Save User genre (?) 
+* Save user image 
+* Save User genre 
+* More test cases
