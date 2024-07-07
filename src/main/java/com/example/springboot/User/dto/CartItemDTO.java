@@ -1,6 +1,7 @@
 package com.example.springboot.User.dto;
 
 public class CartItemDTO {
+    private Long id;
     private Long productId;
     private int amount;
     private Long userId = -1L;
@@ -29,6 +30,14 @@ public class CartItemDTO {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

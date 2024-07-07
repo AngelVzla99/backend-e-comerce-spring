@@ -50,17 +50,22 @@ public class UserService {
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This user is not in the database");
     }
 
-    public UserDTO save(UserDTO user) {
+    public UserDTO save(UserDTO dto) {
         // Search each role in the database
         Set<RoleEntity> roles = new HashSet<>();
-        for (Long id : user.getRoles()) {
+        for (Long id : dto.getRoles()) {
             Optional<RoleEntity> roleTemp = roleEntityRepository.findById(id);
             if (roleTemp.isPresent()) roles.add(roleTemp.get());
             else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
+        if(dto.getId()==null){
+            Optional<UserEntity> user = userEntityRepository.findOneByEmail(dto.getEmail());
+            if (user.isPresent()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email already exist");
+        }
+
         // convert DTO to Entity
-        UserEntity userEntity = userConverter.toEntity(user, roles);
+        UserEntity userEntity = userConverter.toEntity(dto, roles);
         return userConverter.toDTO(userEntityRepository.save(userEntity));
     }
 
@@ -108,29 +113,23 @@ public class UserService {
         return findByEmail(email);
     }
 
-    private UserEntity findUserByEmail(String email){
-        return userEntityRepository
-            .findOneByEmail(email)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The email "+email+ " was not found"));
-    }
-
     public List<RoleDTO> getRoles(String email){
-        UserEntity entity = findUserByEmail(email);
+        UserEntity entity = findUserEntityByEmail(email);
         return roleConverter.toDtoList(entity.getRoles().stream().toList());
     }
 
     public List<AddressDTO> getAddresses(String email){
-        UserEntity entity = findUserByEmail(email);
+        UserEntity entity = findUserEntityByEmail(email);
         return addressConverter.toDtoList(entity.getAddresses());
     }
 
     public List<CartItemDTO> getCartItems(String email){
-        UserEntity entity = findUserByEmail(email);
+        UserEntity entity = findUserEntityByEmail(email);
         return cartItemConverter.toDtoList(entity.getCartItems());
     }
 
     public void updateUserCart(String email, List<CartItemDTO> productIds){
-        UserEntity user = findUserByEmail(email);
+        UserEntity user = findUserEntityByEmail(email);
         user.getCartItems().forEach(item -> cartItemService.delete(item.getId()));
         // search the list of cart items
         productIds.forEach(product -> product.setUserId(user.getId()));
@@ -144,7 +143,7 @@ public class UserService {
 
     public String getUserToken(String email, String password) throws UsernameNotFoundException {
         // get user data
-        UserEntity user = findUserByEmail(email);
+        UserEntity user = findUserEntityByEmail(email);
         // bad password
         if (! new BCryptPasswordEncoder().matches(password, user.getPassword()))
             throw new UsernameNotFoundException("The user with email "+email+" does not exist");
@@ -160,4 +159,9 @@ public class UserService {
     //    method to get entities  //
     // =============================
 
+    public UserEntity findUserEntityByEmail(String email){
+        return userEntityRepository
+                .findOneByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The email "+email+ " was not found"));
+    }
 }

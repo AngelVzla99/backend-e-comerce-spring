@@ -97,6 +97,8 @@ public class TokenUtils {
             // get email form token
             String email = claims.getSubject();
 
+            System.out.println("email" + email);
+
             // get authorities from token
             final Collection<? extends GrantedAuthority> authorities =
                     Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))

@@ -41,14 +41,6 @@ public class UserController {
         return userService.save(user);
     }
 
-    @PostMapping("/create-customer")
-    @ResponseBody
-    public UserDTO createUser( @Valid @RequestBody UserDTO user) {
-        if( userService.isEmailInDataBase(user.getEmail()) )
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "The email is already in the database");
-        return userService.saveCustomer(user);
-    }
-
     @PreAuthorize("hasAnyRole('admin')")
     @PutMapping("/{userId}/add-roles")
     @ResponseBody

@@ -28,6 +28,7 @@ public class CartItemConverter {
         cartItem.setAmount(cartItemEntity.getAmount());
         cartItem.setProductId(cartItemEntity.getProduct().getId());
         cartItem.setUserId(cartItemEntity.getUser().getId());
+        cartItem.setId(cartItemEntity.getId());
         return cartItem;
     }
 
@@ -44,6 +45,7 @@ public class CartItemConverter {
                 .findById(cartItemDTO.getUserId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The user with id "+cartItemDTO.getUserId() +" was not found"));
         cartItem.setUser(user);
+        cartItem.setId(cartItemDTO.getId());
         return cartItem;
     }
 
