@@ -51,7 +51,8 @@ public class WebSecurityConfig {
                         "/docs/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/health",
-                        "/api/auth/login"
+                        "/api/auth/login",
+                        "ws-order"
                 )
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/{id}")
