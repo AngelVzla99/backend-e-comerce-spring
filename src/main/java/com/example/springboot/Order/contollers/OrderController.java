@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,14 +34,27 @@ public class OrderController {
     OrderService orderService;
     @Autowired
     UserService userService;
+    @Autowired
+    SimpMessagingTemplate template;
 
     // ===============
     //    get EPs   //
     // ===============
 
+    /**
+     * This function send a message to all the clients connected to the
+     * websocket endpoint and Subscribed to the topic of the order
+     */
+    @GetMapping("/websocket/{orderId}")
+    @ResponseBody
+    public String websocket( @PathVariable Long orderId ){
+        this.template.convertAndSend("/topic/order/"+orderId, orderId);
+        return "Success";
+    }
     @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("/{id}")
     @ResponseBody
+    @SendTo("/topic/greetings")
     public OrderDTO get(@PathVariable Long id) {
         return orderService.findById(id);
     }
