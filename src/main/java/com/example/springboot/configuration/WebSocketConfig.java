@@ -20,13 +20,3 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
 }
-
-//@Configuration
-//@EnableWebSocket
-//public class WebSocketConfig implements WebSocketConfigurer {
-//
-//    @Override
-//    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-//        registry.addE("/gs-guide-websocket").setAllowedOrigins("*");
-//    }
-//}
