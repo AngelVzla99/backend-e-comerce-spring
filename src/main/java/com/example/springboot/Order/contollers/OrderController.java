@@ -44,6 +44,7 @@ public class OrderController {
     /**
      * This function send a message to all the clients connected to the
      * websocket endpoint and Subscribed to the topic of the order
+     * The name of connection endpoint is ws-order
      */
     @GetMapping("/websocket/{orderId}")
     @ResponseBody
