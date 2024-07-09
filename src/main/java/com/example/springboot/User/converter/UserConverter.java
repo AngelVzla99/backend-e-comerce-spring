@@ -23,7 +23,8 @@ public class UserConverter {
                 user.getEmail(),
                 user.getPhoneNumber(),
                 "",
-                roles
+                roles,
+                user.getResetPasswordToken()
         );
     }
 
@@ -37,7 +38,8 @@ public class UserConverter {
                 user.getEmail(),
                 user.getPhoneNumber(),
                 new BCryptPasswordEncoder().encode(user.getPassword()).toString(),
-                roles
+                roles,
+                user.getResetPasswordToken()
         );
     }
 }

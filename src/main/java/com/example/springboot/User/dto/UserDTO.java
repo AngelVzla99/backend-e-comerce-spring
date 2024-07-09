@@ -27,6 +27,7 @@ public class UserDTO {
     @Size(min = 5, max = 50, message = "The password must be between 5 and 50 characters")
     @NotBlank(message = "The user password is required")
     private String password;
+    private String resetPasswordToken;
     private List<Long> roles = Collections.emptyList();
     private List<CartItemDTO> cartItems = Collections.emptyList();
 
@@ -58,7 +59,7 @@ public class UserDTO {
         this.roles = roles;
     }
 
-    public UserDTO(Long id, String firstName, String lastName, Date createdAt, String email, String phoneNumber, String password, List<Long> roles) {
+    public UserDTO(Long id, String firstName, String lastName, Date createdAt, String email, String phoneNumber, String password, List<Long> roles, String resetPasswordToken) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -67,12 +68,21 @@ public class UserDTO {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.roles = roles;
+        this.resetPasswordToken = resetPasswordToken;
     }
 
     // ===========================
     //   getters and setters    //
     // ===========================
 
+
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
+    }
+
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
+    }
 
     public List<CartItemDTO> getCartItems() {
         return cartItems;

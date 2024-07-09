@@ -1,16 +1,13 @@
 package com.example.springboot.User.services;
 
 import com.example.springboot.User.converter.RoleConverter;
-import com.example.springboot.User.dto.RoleDTO;
+import com.example.springboot.User.dto.*;
 import com.example.springboot.User.entities.RoleEntity;
 import com.example.springboot.User.repositories.RoleEntityRepository;
 import com.example.springboot.User.converter.UserConverter;
-import com.example.springboot.User.dto.UserDTO;
 import com.example.springboot.User.entities.UserEntity;
 import com.example.springboot.User.converter.AddressConverter;
 import com.example.springboot.User.converter.CartItemConverter;
-import com.example.springboot.User.dto.AddressDTO;
-import com.example.springboot.User.dto.CartItemDTO;
 import com.example.springboot.User.repositories.UserEntityRepository;
 import com.example.springboot.security.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.*;
 
@@ -69,6 +67,27 @@ public class UserService {
         return userConverter.toDTO(userEntityRepository.save(userEntity));
     }
 
+    public UserDTO partialUpdate(Long userId, PartialUpdateUserDto dto){
+        // TODO: use a library for this
+        UserEntity user = userEntityRepository
+                .findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The product with id "+ userId +" was not found"));
+
+        String newPassword = dto.getPassword();
+        if(newPassword!=null && !newPassword.isEmpty()){
+            newPassword =  new BCryptPasswordEncoder().encode(newPassword).toString();
+            user.setPassword(newPassword);
+        }
+
+        String newResetPasswordToken = dto.getResetPasswordToken();
+        if(newResetPasswordToken!=null && !newResetPasswordToken.isEmpty()){
+            user.setResetPasswordToken(newResetPasswordToken);
+        }
+
+        UserEntity newEntity = userEntityRepository.save(user);
+        return userConverter.toDTO(newEntity);
+    }
+
     public boolean isEmailInDataBase(String email){
         Optional<UserEntity> user = userEntityRepository.findOneByEmail(email);
         return user.isPresent();
@@ -82,7 +101,7 @@ public class UserService {
     public UserDTO addRole(Long userId, List<Long> roleIds){
         UserEntity userEntity = userEntityRepository
                 .findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The product with id "+ userId +" was not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The user with id "+ userId +" was not found"));
 
         // add each role the user list
         Set<RoleEntity> userRoles = userEntity.getRoles();

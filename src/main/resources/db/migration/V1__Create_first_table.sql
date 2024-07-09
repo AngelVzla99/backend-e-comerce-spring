@@ -58,6 +58,7 @@ CREATE TABLE "users"
  email        varchar(50) NOT NULL,
  phone_number varchar(50) NOT NULL,
  password     text NOT NULL,
+ reset_password_token varchar(100),
  CONSTRAINT PK_user PRIMARY KEY ( "id" )
 );
 

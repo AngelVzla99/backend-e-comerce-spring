@@ -37,6 +37,9 @@ public class UserEntity {
     @Column(name = "password", length = 50, nullable = false)
     private  String password;
 
+    @Column(name = "reset_password_token", length = 100)
+    private String resetPasswordToken;
+
     // other relations
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
@@ -53,6 +56,14 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<AddressEntity> addresses;
+
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
+    }
+
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
+    }
 
     // to string
     @Override
@@ -88,7 +99,7 @@ public class UserEntity {
         this.roles = roles;
     }
 
-    public UserEntity(Long id, String firstName, String lastName, String email, String phoneNumber, String password, Set<RoleEntity> roles) {
+    public UserEntity(Long id, String firstName, String lastName, String email, String phoneNumber, String password, Set<RoleEntity> roles, String resetPasswordToken) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -96,6 +107,7 @@ public class UserEntity {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.roles = roles;
+        this.resetPasswordToken = resetPasswordToken;
     }
 
     public UserEntity(Long id, String firstName, String lastName, Date createdAt, String email, String phoneNumber, String password, Set<RoleEntity> roles) {

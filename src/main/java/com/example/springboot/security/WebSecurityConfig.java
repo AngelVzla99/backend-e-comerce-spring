@@ -52,7 +52,9 @@ public class WebSecurityConfig {
                         "/v3/api-docs/**",
                         "/health",
                         "/api/auth/login",
-                        "ws-order"
+//                        "ws-order", // TODO: add authentication
+                        "/api/auth/reset-password-email",
+                        "/api/auth/reset-password"
                 )
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/{id}")
