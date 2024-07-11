@@ -27,17 +27,18 @@ public class ProductController {
     //    get EPs   //
     // ===============
 
-    @GetMapping("/search-by-text")
+    @GetMapping("/paginated-search")
     @ResponseBody
-    public Page<ProductDTO> getByText(
-            @RequestParam String query,
+    public Page<ProductDTO> paginatedSearch(
+            @RequestParam String queryText,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection
     ){
         // request to the database using pagination
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return productService.findByText(query,pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by( sortDirection, sortBy));
+        return productService.paginatedSearch(queryText,pageable);
     }
 
     @GetMapping("/{id}")

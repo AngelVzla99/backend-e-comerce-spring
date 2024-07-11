@@ -33,8 +33,8 @@ public class ProductService {
         return productRepository.count();
     }
 
-    public Page<ProductDTO> findByText( String query, Pageable pageable ){
-        Page<ProductEntity> products = productRepository.findByNameContainingOrDescriptionContaining(query,query,pageable);
+    public Page<ProductDTO> paginatedSearch( String queryText, Pageable pageable ){
+        Page<ProductEntity> products = productRepository.paginatedSearch(queryText,pageable);
         return products.map(productConverter::toDTO);
     }
 

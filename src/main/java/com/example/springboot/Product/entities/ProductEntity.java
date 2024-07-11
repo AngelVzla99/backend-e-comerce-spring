@@ -59,6 +59,9 @@ public class ProductEntity {
     @Column(name = "created_at")
     private Date createdAt = new Date();
 
+    @Column(name = "brand", nullable = false, length = 100)
+    private String brand;
+
     // add other columns
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
@@ -118,7 +121,16 @@ public class ProductEntity {
 
     // getters ans setters
 
-    public void addToQuantity( Integer value ){ this.quantity += value; }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void addToQuantity(Integer value ){ this.quantity += value; }
 
     public List<ProductInventoryEntity> getProductInventory() {
         return productInventory;

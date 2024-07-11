@@ -4,11 +4,15 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
+@Setter
 public class ProductDTO {
     private Long id;
     private Long discountId;
@@ -31,6 +35,7 @@ public class ProductDTO {
     private String amount;
     private BigDecimal weight;
     private BigDecimal height;
+    private String brand;
     @NotNull(message = "categories is required")
     @Size(min = 1, message = "at least one category is required")
     private List<Long> categories;

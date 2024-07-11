@@ -20,6 +20,7 @@ CREATE TABLE products
  price            bigint NOT NULL,
  tax_percentage  int NOT NULL,
  quantity         bigint NOT NULL,
+ brand            varchar(100) NULL,
  description      text NOT NULL,
  photo_url_small  varchar(100) NULL,
  photo_url_medium varchar(100) NULL,

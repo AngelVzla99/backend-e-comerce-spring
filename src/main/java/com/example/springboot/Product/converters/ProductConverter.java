@@ -48,6 +48,7 @@ public class ProductConverter {
         dto.setAmount(product.getAmount());
         dto.setWeight(product.getWeight());
         dto.setHeight(product.getHeight());
+        dto.setBrand(product.getBrand());
         return dto;
     }
 
@@ -66,6 +67,7 @@ public class ProductConverter {
         product.setAmount(dto.getAmount());
         product.setWeight(dto.getWeight());
         product.setHeight(dto.getHeight());
+        product.setBrand(dto.getBrand());
         // categories
         Set<CategoryEntity> categories = new HashSet<>();
         dto.getCategories().forEach(
