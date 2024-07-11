@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface ProductEntityRepository extends JpaRepository<ProductEntity, Long> {
 
+    long count();
     Page<ProductEntity> findAll(Pageable pageable);
     List<ProductEntity> findByIdIn(List<Long> ids);
     Page<ProductEntity> findByNameContainingOrDescriptionContaining( String name, String description, Pageable pageable);
@@ -31,4 +32,17 @@ public interface ProductEntityRepository extends JpaRepository<ProductEntity, Lo
                     "where to_tsvector(p.\"name\" || '  '|| p.brand || ' ' || p.description) @@ plainto_tsquery(?1))",
             nativeQuery = true)
     Page<ProductEntity> paginatedSearch(String queryText, Pageable pageable);
+
+    @Query(value = "select * from (select *\n" +
+            "from (\n" +
+            "\tselect product_id, sum(oi.quantity) as number_of_purchase\n" +
+            "\tfrom products p \n" +
+            "\tinner join order_item oi  ON p.id = oi.product_id\n" +
+            "\tgroup by product_id\n" +
+            ") as sub_query\n" +
+            "inner join products p2 on p2.id = sub_query.product_id) as new_product_table",
+
+            countQuery = "SELECT count(*) from products",
+            nativeQuery = true)
+    Page<ProductEntity> mostPopular(Pageable pageable);
 }

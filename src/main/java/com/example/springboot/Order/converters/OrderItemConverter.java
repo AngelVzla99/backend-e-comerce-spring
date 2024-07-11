@@ -28,13 +28,15 @@ public class OrderItemConverter {
     }
 
     public OrderItemEntity toEntity(OrderItemDTO orderItemDTO, OrderEntity orderEntity) {
-        OrderItemEntity entity = modelMapper.map(orderItemDTO, OrderItemEntity.class);
+        OrderItemEntity entity = new OrderItemEntity();
         // relations
         ProductEntity product = productEntityRepository
                 .findById( orderItemDTO.getProductId() )
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The product with id "+orderItemDTO.getProductId() +" was not found"));
         entity.setProduct(product);
         entity.setOrder(orderEntity);
+        entity.setPurchasePrice(orderItemDTO.getPurchasePrice());
+        entity.setQuantity(orderItemDTO.getQuantity());
         return entity;
     }
 

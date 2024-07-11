@@ -47,6 +47,8 @@ public class WebSecurityConfig {
                 .requestMatchers(
                         "/api/user/customer",
                         "/api/products/search-by-text/**",
+                        "/api/products/most-popular",
+                        "/api/products/best-sales",
                         "/api/home/**",
                         "/docs/swagger-ui/**",
                         "/v3/api-docs/**",

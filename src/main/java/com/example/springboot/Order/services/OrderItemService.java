@@ -26,9 +26,13 @@ public class OrderItemService {
 
     public List<OrderItemEntity> saveAll(List<OrderItemDTO> orderItems, OrderEntity orderEntity) {
         List<OrderItemEntity> orderItemEntities = orderItemConverter.toEntityList(orderItems, orderEntity);
+        orderItemEntities.forEach(
+                orderItemEntity ->
+                        System.out.println(orderItemEntity.getId())
+        );
         // VALIDATION: check stock (this can also be made in the conversion DTO)
         List<Long> productsOutOfStock = productsOutOfStock(orderItemEntities);
-        if (productsOutOfStock.size() > 0)
+        if (!productsOutOfStock.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The products with id " + productsOutOfStock.toString() + " are out of stock");
         // ACTION: delete products from stock
         orderItemEntities.forEach(
@@ -37,6 +41,7 @@ public class OrderItemService {
                                 .getProduct()
                                 .addToQuantity(-orderItemEntity.getQuantity())
         );
+
         // save in the db
         return orderItemRepository.saveAll(orderItemEntities);
     }

@@ -41,6 +41,25 @@ public class ProductController {
         return productService.paginatedSearch(queryText,pageable);
     }
 
+    @GetMapping("/most-popular")
+    @ResponseBody
+    public Page<ProductDTO> mostPopular(){
+        int page = 0, size = 10;
+        String sortBy = "number_of_purchase";
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        return productService.mostPopulars(pageable);
+    }
+
+    @GetMapping("/best-sales")
+    @ResponseBody
+    public Page<ProductDTO> bestSales(){
+        int size = 10;
+        long qty = productService.count()/size;
+        int idx = (int)(Math.random() * qty);
+        Pageable pageable = PageRequest.of(idx, size);
+        return productService.findAllPageable(pageable);
+    }
+
     @GetMapping("/{id}")
     @ResponseBody
     public ProductDTO get(@PathVariable Long id) {

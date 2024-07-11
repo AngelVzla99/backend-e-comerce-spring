@@ -38,12 +38,21 @@ public class ProductService {
         return products.map(productConverter::toDTO);
     }
 
+    public Page<ProductDTO> mostPopulars( Pageable pageable ){
+        Page<ProductEntity> products = productRepository.mostPopular(pageable);
+        return products.map(productConverter::toDTO);
+    }
+
     public Page<ProductDTO> findAllPageable(Pageable pageable) {
         Page<ProductEntity> responsePage = productRepository.findAll(pageable);
         if (!responsePage.hasContent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         // convert the resulting list to dto
         return responsePage.map(productConverter::toDTO);
+    }
+
+    public long count(){
+        return productRepository.count();
     }
 
     public ProductDTO findById(Long id) {

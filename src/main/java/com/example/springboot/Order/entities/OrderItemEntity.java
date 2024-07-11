@@ -2,6 +2,7 @@ package com.example.springboot.Order.entities;
 
 import com.example.springboot.Product.entities.ProductEntity;
 import jakarta.persistence.*;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
@@ -25,6 +26,17 @@ public class OrderItemEntity {
     private BigDecimal purchasePrice;
 
     private Integer quantity;
+
+    @Override
+    public String toString() {
+        return "OrderItemEntity{" +
+                "id=" + id +
+                ", product=" + product +
+                ", order=" + order +
+                ", purchasePrice=" + purchasePrice +
+                ", quantity=" + quantity +
+                '}';
+    }
 
     // getters and setters
 

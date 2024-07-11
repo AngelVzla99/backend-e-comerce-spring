@@ -9,7 +9,9 @@ import com.example.springboot.User.services.CustomerService;
 import com.example.springboot.User.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
@@ -58,6 +60,9 @@ public class CustomerController {
     @PostMapping
     @ResponseBody
     public UserDTO createCustomer(@Valid @RequestBody UserDTO dto) {
+        if(dto.getId()!=null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This endpoint it's only to create a customer");
+        }
         return customerService.create(dto);
     }
 
