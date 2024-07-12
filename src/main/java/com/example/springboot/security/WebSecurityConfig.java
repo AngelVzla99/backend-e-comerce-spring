@@ -33,9 +33,9 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
 
-        JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter();
-        jwtAuthenticationFilter.setAuthenticationManager(authManager);
-        jwtAuthenticationFilter.setFilterProcessesUrl("/login");
+//        JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter();
+//        jwtAuthenticationFilter.setAuthenticationManager(authManager);
+//        jwtAuthenticationFilter.setFilterProcessesUrl("/login-delete");
 
         return http
                 .cors()
@@ -45,13 +45,18 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests()
                 // public endpoints
                 .requestMatchers(
-                        "/api/users/create-customer",
+                        "/api/user/customer",
                         "/api/products/search-by-text/**",
+                        "/api/products/most-popular",
+                        "/api/products/best-sales",
                         "/api/home/**",
                         "/docs/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/health",
-                        "/login"
+                        "/api/auth/login",
+//                        "ws-order", // TODO: add authentication
+                        "/api/auth/reset-password-email",
+                        "/api/auth/reset-password"
                 )
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/{id}")
